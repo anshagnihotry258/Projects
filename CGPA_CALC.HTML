@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CGPA Calculator</h1>
+        <label for="grade">Grade (A+ to F):</label>
+        <input type="text" id="grade" placeholder="Enter Grade">
+
+        <label for="credit">Credit:</label>
+        <input type="number" id="credit" placeholder="Enter Credit" min="1">
+
+        <button onclick="addEntry()">Add</button>
+        <button onclick="deleteEntry()">Delete Last Entry</button>
+        <button onclick="calculateCGPA()">Calculate CGPA</button>
+
+        <p id="output"></p>
+        <p id="entries"></p>
+    </div>
+
+    <script>
+        const entries = [];
+
+        function gradeToValue(grade) {
+            const gradeMap = {"A+": 10, "A": 9, "B+": 8, "B": 7, "C+": 6, "C": 5, "D": 4, "F": 0};
+            return gradeMap[grade.toUpperCase()] || null;
+        }
+
+        function addEntry() {
+            const grade = document.getElementById("grade").value.trim();
+            const credit = document.getElementById("credit").value.trim();
+            const gradeValue = gradeToValue(grade);
+
+            if (!gradeValue && gradeValue !== 0) {
+                alert("Invalid grade. Use A+ to F.");
+                return;
+            }
+
+            if (!credit || credit <= 0) {
+                alert("Credit must be a positive number.");
+                return;
+            }
+
+            entries.push({ gradeValue, credit: parseInt(credit) });
+            document.getElementById("output").innerText = `Added: ${grade} (${gradeValue}), Credit: ${credit}`;
+            document.getElementById("entries").innerText = `Current Entries: ${JSON.stringify(entries)}`;
+            document.getElementById("grade").value = "";
+            document.getElementById("credit").value = "";
+        }
+
+        function deleteEntry() {
+            if (entries.length === 0) {
+                alert("No entries to delete.");
+                return;
+            }
+
+            entries.pop();
+            document.getElementById("output").innerText = "Last entry deleted.";
+            document.getElementById("entries").innerText = `Current Entries: ${JSON.stringify(entries)}`;
+        }
+
+        function calculateCGPA() {
+            if (entries.length === 0) {
+                alert("No entries available for CGPA calculation.");
+                return;
+            }
+
+            let totalCredits = 0;
+            let weightedSum = 0;
+
+            for (const entry of entries) {
+                totalCredits += entry.credit;
+                weightedSum += entry.gradeValue * entry.credit;
+            }
+
+            const cgpa = weightedSum / totalCredits;
+            document.getElementById("output").innerText = `CGPA: ${cgpa.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button, select {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CGPA Calculator</h1>
+        <label for="grade">Grade (A+ to F):</label>
+        <select id="grade">
+            <option value="A+">A+</option>
+            <option value="A">A</option>
+            <option value="B+">B+</option>
+            <option value="B">B</option>
+            <option value="C+">C+</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+            <option value="F">F</option>
+        </select>
+
+        <label for="credit">Credit:</label>
+        <input type="number" id="credit" placeholder="Enter Credit" min="1">
+
+        <button onclick="addEntry()">Add</button>
+        <button onclick="deleteEntry()">Delete Last Entry</button>
+        <button onclick="calculateCGPA()">Calculate CGPA</button>
+        <button onclick="showInputs()">Show Inputs</button>
+
+        <p id="output"></p>
+        <div id="table-container"></div>
+    </div>
+
+    <script>
+        const entries = [];
+
+        function gradeToValue(grade) {
+            const gradeMap = {"A+": 10, "A": 9, "B+": 8, "B": 7, "C+": 6, "C": 5, "D": 4, "F": 0};
+            return gradeMap[grade.toUpperCase()] || null;
+        }
+
+        function addEntry() {
+            const grade = document.getElementById("grade").value;
+            const credit = document.getElementById("credit").value.trim();
+            const gradeValue = gradeToValue(grade);
+
+            if (!gradeValue && gradeValue !== 0) {
+                alert("Invalid grade. Use A+ to F.");
+                return;
+            }
+
+            if (!credit || credit <= 0) {
+                alert("Credit must be a positive number.");
+                return;
+            }
+
+            entries.push({ grade, gradeValue, credit: parseInt(credit) });
+            document.getElementById("output").innerText = `Added: ${grade} (${gradeValue}), Credit: ${credit}`;
+            document.getElementById("credit").value = "";
+        }
+
+        function deleteEntry() {
+            if (entries.length === 0) {
+                alert("No entries to delete.");
+                return;
+            }
+
+            entries.pop();
+            document.getElementById("output").innerText = "Last entry deleted.";
+        }
+
+        function calculateCGPA() {
+            if (entries.length === 0) {
+                alert("No entries available for CGPA calculation.");
+                return;
+            }
+
+            let totalCredits = 0;
+            let weightedSum = 0;
+
+            for (const entry of entries) {
+                totalCredits += entry.credit;
+                weightedSum += entry.gradeValue * entry.credit;
+            }
+
+            const cgpa = weightedSum / totalCredits;
+            document.getElementById("output").innerText = `CGPA: ${cgpa.toFixed(2)}`;
+        }
+
+        function showInputs() {
+            const container = document.getElementById("table-container");
+            container.innerHTML = "";
+
+            if (entries.length === 0) {
+                container.innerHTML = "<p>No entries to display.</p>";
+                return;
+            }
+
+            const table = document.createElement("table");
+            const headerRow = document.createElement("tr");
+            headerRow.innerHTML = "<th>Grade</th><th>Grade Value</th><th>Credit</th>";
+            table.appendChild(headerRow);
+
+            for (const entry of entries) {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>${entry.grade}</td><td>${entry.gradeValue}</td><td>${entry.credit}</td>`;
+                table.appendChild(row);
+            }
+
+            container.appendChild(table);
+        }
+    </script>
+</body>
+</html>
+
