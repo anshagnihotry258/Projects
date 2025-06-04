@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button, select {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        h3 {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CGPA Calculator</h1>
+        
+        <label for="grade">Grade (A+ to F):</label>
+        <select id="grade">
+            <option value="A+">A+</option>
+            <option value="A">A</option>
+            <option value="B+">B+</option>
+            <option value="B">B</option>
+            <option value="C+">C+</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+            <option value="F">F</option>
+        </select>
+
+        <label for="credit">Credit:</label>
+        <input type="number" id="credit" placeholder="Enter Credit" min="1">
+
+        <button onclick="addEntry()">Add</button>
+        <button onclick="deleteEntry()">Delete Last Entry</button>
+        <button onclick="calculateCGPA()">Calculate CGPA</button>
+        
+        <h3>Delete Entry by Serial Number</h3>
+        <input type="number" id="sno" placeholder="Enter Serial Number" min="1">
+        <button onclick="deleteEntryByIndex()">Delete Selected Entry</button>
+
+        <button onclick="showInputs()">Show Inputs</button>
+
+        <h3>Manage Saved Lists</h3>
+        <input type="text" id="listName" placeholder="Enter List Name (e.g., Sem 1)">
+        <button onclick="saveList()">Save List</button>
+        <button onclick="loadList()">Load List</button>
+        <button onclick="renameList()">Rename List</button>
+        
+        <select id="savedListsDropdown" onchange="populateListNameFromDropdown()">
+            <option value="">--Select Saved List--</option>
+        </select>
+
+        <p id="output"></p>
+        <div id="table-container"></div>
+    </div>
+
+    <script>
+        const entries = [];
+
+        function gradeToValue(grade) {
+            const gradeMap = {"A": 10, "A-": 9, "B": 8, "B-": 7, "C": 6, "C-": 5, "D": 4, "F": 0};
+            return gradeMap[grade.toUpperCase()] || null;
+        }
+
+        function addEntry() {
+            const grade = document.getElementById("grade").value;
+            const credit = document.getElementById("credit").value.trim();
+            const gradeValue = gradeToValue(grade);
+
+            if (!gradeValue && gradeValue !== 0) {
+                alert("Invalid grade. Use A+ to F.");
+                return;
+            }
+
+            if (!credit || credit <= 0) {
+                alert("Credit must be a positive number.");
+                return;
+            }
+
+            entries.push({ grade, gradeValue, credit: parseInt(credit) });
+            document.getElementById("output").innerText = `Added: ${grade} (${gradeValue}), Credit: ${credit}`;
+            document.getElementById("credit").value = "";
+            showInputs();
+        }
+
+        function deleteEntry() {
+            if (entries.length === 0) {
+                alert("No entries to delete.");
+                return;
+            }
+
+            entries.pop();
+            document.getElementById("output").innerText = "Last entry deleted.";
+            showInputs();
+        }
+
+        function deleteEntryByIndex() {
+            const sno = document.getElementById("sno").value.trim();
+
+            if (!sno || sno <= 0 || sno > entries.length) {
+                alert("Invalid serial number.");
+                return;
+            }
+
+            const index = sno - 1;
+            entries.splice(index, 1);
+            document.getElementById("output").innerText = `Entry with serial number ${sno} deleted.`;
+            document.getElementById("sno").value = "";
+            showInputs();
+        }
+
+        function calculateCGPA() {
+            if (entries.length === 0) {
+                alert("No entries available for CGPA calculation.");
+                return;
+            }
+
+            let totalCredits = 0;
+            let weightedSum = 0;
+
+            for (const entry of entries) {
+                totalCredits += entry.credit;
+                weightedSum += entry.gradeValue * entry.credit;
+            }
+
+            const cgpa = weightedSum / totalCredits;
+            document.getElementById("output").innerText = `CGPA: ${cgpa.toFixed(2)}`;
+        }
+
+        function showInputs() {
+            const container = document.getElementById("table-container");
+            container.innerHTML = "";
+
+            if (entries.length === 0) {
+                container.innerHTML = "<p>No entries to display.</p>";
+                return;
+            }
+
+            const table = document.createElement("table");
+            const headerRow = document.createElement("tr");
+            headerRow.innerHTML = "<th>Sno</th><th>Grade</th><th>Grade Value</th><th>Credit</th>";
+            table.appendChild(headerRow);
+
+            entries.forEach((entry, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>${index + 1}</td><td>${entry.grade}</td><td>${entry.gradeValue}</td><td>${entry.credit}</td>`;
+                table.appendChild(row);
+            });
+
+            container.appendChild(table);
+        }
+
+        // === New Features Below ===
+
+        function updateDropdown() {
+            const dropdown = document.getElementById("savedListsDropdown");
+            dropdown.innerHTML = '<option value="">--Select Saved List--</option>';
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key) && key.startsWith("cgpaList_")) {
+                    const name = key.replace("cgpaList_", "");
+                    const option = document.createElement("option");
+                    option.value = name;
+                    option.text = name;
+                    dropdown.appendChild(option);
+                }
+            }
+        }
+
+        function saveList() {
+            const name = document.getElementById("listName").value.trim();
+            if (!name) {
+                alert("Please enter a name to save the list.");
+                return;
+            }
+            localStorage.setItem("cgpaList_" + name, JSON.stringify(entries));
+            alert(`List "${name}" saved!`);
+            updateDropdown();
+        }
+
+        function loadList() {
+            const name = document.getElementById("listName").value.trim();
+            if (!name) {
+                alert("Please enter the name of the list to load.");
+                return;
+            }
+
+            const stored = localStorage.getItem("cgpaList_" + name);
+            if (!stored) {
+                alert("No such list found.");
+                return;
+            }
+
+            const data = JSON.parse(stored);
+            entries.length = 0;
+            data.forEach(entry => entries.push(entry));
+            showInputs();
+            document.getElementById("output").innerText = `Loaded list: ${name}`;
+        }
+
+        function renameList() {
+            const oldName = document.getElementById("savedListsDropdown").value;
+            const newName = document.getElementById("listName").value.trim();
+
+            if (!oldName || !newName) {
+                alert("Select a list and enter a new name.");
+                return;
+            }
+
+            const oldKey = "cgpaList_" + oldName;
+            const newKey = "cgpaList_" + newName;
+
+            if (!localStorage.getItem(oldKey)) {
+                alert("Selected list does not exist.");
+                return;
+            }
+
+            localStorage.setItem(newKey, localStorage.getItem(oldKey));
+            localStorage.removeItem(oldKey);
+            alert(`Renamed "${oldName}" to "${newName}"`);
+            updateDropdown();
+        }
+
+        function populateListNameFromDropdown() {
+            const selected = document.getElementById("savedListsDropdown").value;
+            document.getElementById("listName").value = selected;
+        }
+
+        window.onload = updateDropdown;
+    </script>
+</body>
+</html>
