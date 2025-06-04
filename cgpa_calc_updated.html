@@ -1,4 +1,3 @@
-<!-- ✂️ HTML remains mostly same, changes marked below -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,44 +6,88 @@
   <title>CGPA Calculator</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      text-align: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
     }
+
     .container {
-      max-width: 500px;
-      margin: 0 auto;
-      border: 1px solid #ccc;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background: white;
+      margin-top: 40px;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 600px;
     }
-    input, button, select {
-      margin: 10px 0;
-      padding: 10px;
+
+    h1, h3 {
+      color: #333;
+    }
+
+    input, select, button {
       width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
     }
+
     button {
-      background-color: #4CAF50;
+      background-color: #6c63ff;
       color: white;
       border: none;
-      cursor: pointer;
+      transition: background-color 0.3s ease;
     }
+
     button:hover {
-      background-color: #45a049;
+      background-color: #574fce;
     }
+
     table {
-      margin: 20px auto;
-      border-collapse: collapse;
       width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
     }
+
     th, td {
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
       padding: 10px;
       text-align: center;
     }
+
     th {
       background-color: #f4f4f4;
+    }
+
+    #output {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #444;
+    }
+
+    .loaded-list-section {
+      margin-top: 30px;
+    }
+
+    .loaded-list-section h3 {
+      margin-bottom: 5px;
+    }
+
+    .list-display {
+      background-color: #f9f9f9;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      text-align: left;
+      white-space: pre-wrap;
     }
   </style>
 </head>
@@ -67,7 +110,6 @@
     <label for="credit">Credit:</label>
     <input type="number" id="credit" placeholder="Enter Credit" min="1" />
 
-    <!-- 🌟 NEW OPTIONAL COURSE NAME INPUT -->
     <label for="course">Course Name (optional):</label>
     <input type="text" id="course" placeholder="Enter Course Name (optional)" />
 
@@ -93,13 +135,18 @@
 
     <p id="output"></p>
     <div id="table-container"></div>
+
+    <div class="loaded-list-section">
+      <h3>Loaded List Data:</h3>
+      <div class="list-display" id="loadedListPreview">Nothing loaded yet.</div>
+    </div>
   </div>
 
   <script>
     const entries = [];
 
     function gradeToValue(grade) {
-      const gradeMap = {"A+": 10, "A": 9, "B+": 8, "B": 7, "C+": 6, "C": 5, "D": 4, "F": 0};
+      const gradeMap = { "A+": 10, "A": 9, "B+": 8, "B": 7, "C+": 6, "C": 5, "D": 4, "F": 0 };
       return gradeMap[grade.toUpperCase()] ?? null;
     }
 
@@ -238,6 +285,12 @@
       data.forEach(entry => entries.push(entry));
       showInputs();
       document.getElementById("output").innerText = `Loaded list: ${name}`;
+
+      const displayText = data.map((entry, i) =>
+        `#${i + 1} ➤ ${entry.grade} (${entry.gradeValue}), ${entry.credit} Cr${entry.course ? ` - ${entry.course}` : ""}`
+      ).join("\n");
+
+      document.getElementById("loadedListPreview").innerText = displayText || "Nothing loaded yet.";
     }
 
     function renameList() {
