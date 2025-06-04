@@ -15,7 +15,6 @@
       justify-content: center;
       align-items: flex-start;
     }
-
     .container {
       background: white;
       margin-top: 40px;
@@ -25,11 +24,9 @@
       width: 90%;
       max-width: 600px;
     }
-
     h1, h3 {
       color: #333;
     }
-
     input, select, button {
       width: 100%;
       padding: 10px;
@@ -38,48 +35,39 @@
       border-radius: 8px;
       font-size: 14px;
     }
-
     button {
       background-color: #6c63ff;
       color: white;
       border: none;
       transition: background-color 0.3s ease;
     }
-
     button:hover {
       background-color: #574fce;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
     }
-
     th, td {
       border: 1px solid #ddd;
       padding: 10px;
       text-align: center;
     }
-
     th {
       background-color: #f4f4f4;
     }
-
     #output {
       margin-top: 15px;
       font-weight: bold;
       color: #444;
     }
-
     .loaded-list-section {
       margin-top: 30px;
     }
-
     .loaded-list-section h3 {
       margin-bottom: 5px;
     }
-
     .list-display {
       background-color: #f9f9f9;
       padding: 10px;
@@ -160,19 +148,16 @@
         alert("Invalid grade. Use A+ to F.");
         return;
       }
-
       if (!credit || credit <= 0) {
         alert("Credit must be a positive number.");
         return;
       }
-
       entries.push({ grade, gradeValue, credit: parseInt(credit), course: course || null });
       document.getElementById("output").innerText = `Added: ${grade} (${gradeValue}), Credit: ${credit}${course ? `, Course: ${course}` : ""}`;
       document.getElementById("credit").value = "";
       document.getElementById("course").value = "";
       showInputs();
     }
-
     function deleteEntry() {
       if (entries.length === 0) {
         alert("No entries to delete.");
@@ -182,7 +167,6 @@
       document.getElementById("output").innerText = "Last entry deleted.";
       showInputs();
     }
-
     function deleteEntryByIndex() {
       const sno = document.getElementById("sno").value.trim();
       if (!sno || sno <= 0 || sno > entries.length) {
@@ -212,7 +196,6 @@
       const cgpa = weightedSum / totalCredits;
       document.getElementById("output").innerText = `CGPA: ${cgpa.toFixed(2)}`;
     }
-
     function showInputs() {
       const container = document.getElementById("table-container");
       container.innerHTML = "";
@@ -221,7 +204,6 @@
         container.innerHTML = "<p>No entries to display.</p>";
         return;
       }
-
       const table = document.createElement("table");
       const headerRow = document.createElement("tr");
       headerRow.innerHTML = "<th>Sno</th><th>Grade</th><th>Value</th><th>Credit</th><th>Course</th>";
@@ -241,7 +223,6 @@
 
       container.appendChild(table);
     }
-
     function updateDropdown() {
       const dropdown = document.getElementById("savedListsDropdown");
       dropdown.innerHTML = '<option value="">--Select Saved List--</option>';
@@ -255,7 +236,6 @@
         }
       }
     }
-
     function saveList() {
       const name = document.getElementById("listName").value.trim();
       if (!name) {
@@ -266,20 +246,17 @@
       alert(`Saved list: ${name}`);
       updateDropdown();
     }
-
     function loadList() {
       const name = document.getElementById("listName").value.trim();
       if (!name) {
         alert("Enter the name of the list to load.");
         return;
       }
-
       const stored = localStorage.getItem("cgpaList_" + name);
       if (!stored) {
         alert("List not found.");
         return;
       }
-
       const data = JSON.parse(stored);
       entries.length = 0;
       data.forEach(entry => entries.push(entry));
@@ -292,7 +269,6 @@
 
       document.getElementById("loadedListPreview").innerText = displayText || "Nothing loaded yet.";
     }
-
     function renameList() {
       const oldName = document.getElementById("savedListsDropdown").value;
       const newName = document.getElementById("listName").value.trim();
@@ -301,7 +277,6 @@
         alert("Select a list and enter new name.");
         return;
       }
-
       const oldKey = "cgpaList_" + oldName;
       const newKey = "cgpaList_" + newName;
 
@@ -309,18 +284,15 @@
         alert("List not found.");
         return;
       }
-
       localStorage.setItem(newKey, localStorage.getItem(oldKey));
       localStorage.removeItem(oldKey);
       alert(`Renamed "${oldName}" to "${newName}"`);
       updateDropdown();
     }
-
     function populateListNameFromDropdown() {
       const selected = document.getElementById("savedListsDropdown").value;
       document.getElementById("listName").value = selected;
     }
-
     window.onload = updateDropdown;
   </script>
 </body>
