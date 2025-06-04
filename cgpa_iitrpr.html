@@ -54,14 +54,14 @@
     <div class="container">
         <h1>CGPA Calculator</h1>
         
-        <label for="grade">Grade (A+ to F):</label>
+        <label for="grade">Grade (A to F):</label>
         <select id="grade">
-            <option value="A+">A+</option>
             <option value="A">A</option>
-            <option value="B+">B+</option>
+            <option value="A-">A-</option>
             <option value="B">B</option>
-            <option value="C+">C+</option>
+            <option value="B-">B-</option>
             <option value="C">C</option>
+            <option value="C-">C-</option>
             <option value="D">D</option>
             <option value="F">F</option>
         </select>
@@ -97,7 +97,7 @@
         const entries = [];
 
         function gradeToValue(grade) {
-            const gradeMap = {"A": 10, "A-": 9, "B": 8, "B-": 7, "C": 6, "C-": 5, "D": 4, "F": 0};
+            const gradeMap = {"A": 10, "A-": 9, "B": 8, "B-": 7, "C": 6, "C": 5, "D": 4, "F": 0};
             return gradeMap[grade.toUpperCase()] || null;
         }
 
