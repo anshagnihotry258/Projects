@@ -67,7 +67,7 @@
         </select>
 
         <label for="credit">Credit:</label>
-        <input type="number" id="credit" placeholder="Enter Credit" min="1">
+        <input type="number" id="credit" placeholder="Enter Credit" min="0.1" step="0.1" />
 
         <button onclick="addEntry()">Add</button>
         <button onclick="deleteEntry()">Delete Last Entry</button>
@@ -116,7 +116,7 @@
                 return;
             }
 
-            entries.push({ grade, gradeValue, credit: parseInt(credit) });
+            entries.push({ grade, gradeValue, credit: parseFloat(credit) });
             document.getElementById("output").innerText = `Added: ${grade} (${gradeValue}), Credit: ${credit}`;
             document.getElementById("credit").value = "";
             showInputs();
