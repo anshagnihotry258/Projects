@@ -27,13 +27,17 @@
     h1, h3 {
       color: #333;
     }
-    input, select, button {
+    input, select, button, textarea {
       width: 100%;
       padding: 10px;
       margin-top: 10px;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 14px;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 60px;
     }
     button {
       background-color: #6c63ff;
@@ -111,6 +115,9 @@
 
     <button onclick="showInputs()">Show Inputs</button>
 
+    <h3>Note for This List</h3>
+    <textarea id="userNote" placeholder="Write a small note for this list (optional)..."></textarea>
+
     <h3>Manage Saved Lists</h3>
     <input type="text" id="listName" placeholder="Enter List Name (e.g., Sem 1)" />
     <button onclick="saveList()">Save List</button>
@@ -132,6 +139,7 @@
 
   <script>
     const entries = [];
+    let currentNote = "";
 
     function gradeToValue(grade) {
       const gradeMap = { "A+": 10, "A": 9, "B+": 8, "B": 7, "C+": 6, "C": 5, "D": 4, "F": 0 };
@@ -158,6 +166,7 @@
       document.getElementById("course").value = "";
       showInputs();
     }
+
     function deleteEntry() {
       if (entries.length === 0) {
         alert("No entries to delete.");
@@ -167,6 +176,7 @@
       document.getElementById("output").innerText = "Last entry deleted.";
       showInputs();
     }
+
     function deleteEntryByIndex() {
       const sno = document.getElementById("sno").value.trim();
       if (!sno || sno <= 0 || sno > entries.length) {
@@ -194,8 +204,9 @@
       }
 
       const cgpa = weightedSum / totalCredits;
-      document.getElementById("output").innerText = `CGPA: ${cgpa.toFixed(2)}`;
+      document.getElementById("output").innerText = `CGPA: ${cgpa.toFixed(2)} | Total Credits: ${totalCredits.toFixed(1)}`;
     }
+
     function showInputs() {
       const container = document.getElementById("table-container");
       container.innerHTML = "";
@@ -204,12 +215,15 @@
         container.innerHTML = "<p>No entries to display.</p>";
         return;
       }
+
       const table = document.createElement("table");
       const headerRow = document.createElement("tr");
-      headerRow.innerHTML = "<th>Sno</th><th>Grade</th><th>Value</th><th>Credit</th><th>Course</th>";
+      headerRow.innerHTML = "<th>Sno</th><th>Grade</th><th>Value</th><th>Credit</th><th>Course</th><th>Running Total Credit</th>";
       table.appendChild(headerRow);
 
+      let runningTotal = 0;
       entries.forEach((entry, index) => {
+        runningTotal += entry.credit;
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${index + 1}</td>
@@ -217,12 +231,14 @@
           <td>${entry.gradeValue}</td>
           <td>${entry.credit}</td>
           <td>${entry.course ?? "-"}</td>
+          <td>${runningTotal.toFixed(1)}</td>
         `;
         table.appendChild(row);
       });
 
       container.appendChild(table);
     }
+
     function updateDropdown() {
       const dropdown = document.getElementById("savedListsDropdown");
       dropdown.innerHTML = '<option value="">--Select Saved List--</option>';
@@ -236,16 +252,20 @@
         }
       }
     }
+
     function saveList() {
       const name = document.getElementById("listName").value.trim();
+      currentNote = document.getElementById("userNote").value.trim();
       if (!name) {
         alert("Enter a name to save the list.");
         return;
       }
-      localStorage.setItem("cgpaList_" + name, JSON.stringify(entries));
+      const saveData = { entries, note: currentNote };
+      localStorage.setItem("cgpaList_" + name, JSON.stringify(saveData));
       alert(`Saved list: ${name}`);
       updateDropdown();
     }
+
     function loadList() {
       const name = document.getElementById("listName").value.trim();
       if (!name) {
@@ -259,16 +279,20 @@
       }
       const data = JSON.parse(stored);
       entries.length = 0;
-      data.forEach(entry => entries.push(entry));
+      data.entries.forEach(entry => entries.push(entry));
+      currentNote = data.note || "";
+      document.getElementById("userNote").value = currentNote;
       showInputs();
       document.getElementById("output").innerText = `Loaded list: ${name}`;
 
-      const displayText = data.map((entry, i) =>
+      const displayText = data.entries.map((entry, i) =>
         `#${i + 1} ➤ ${entry.grade} (${entry.gradeValue}), ${entry.credit} Cr${entry.course ? ` - ${entry.course}` : ""}`
       ).join("\n");
 
-      document.getElementById("loadedListPreview").innerText = displayText || "Nothing loaded yet.";
+      document.getElementById("loadedListPreview").innerText =
+        `Note: ${currentNote || "No note"}\n\n${displayText || "Nothing loaded yet."}`;
     }
+
     function renameList() {
       const oldName = document.getElementById("savedListsDropdown").value;
       const newName = document.getElementById("listName").value.trim();
@@ -289,10 +313,12 @@
       alert(`Renamed "${oldName}" to "${newName}"`);
       updateDropdown();
     }
+
     function populateListNameFromDropdown() {
       const selected = document.getElementById("savedListsDropdown").value;
       document.getElementById("listName").value = selected;
     }
+
     window.onload = updateDropdown;
   </script>
 </body>
