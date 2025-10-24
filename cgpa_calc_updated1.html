@@ -166,24 +166,19 @@
     let entries = JSON.parse(localStorage.getItem("cgpaEntries")) || [];
 
     function addOldCgpa() {
-      const oldCg = prompt("Enter your old CGPA (0-10):", document.getElementById("oldCgpa").value || "0");
-      const oldCr = prompt("Enter your old total credits:", document.getElementById("oldCredits").value || "0");
+      const cg = parseFloat(document.getElementById("oldCgpa").value) || 0;
+      const cr = parseFloat(document.getElementById("oldCredits").value) || 0;
 
-      const cg = parseFloat(oldCg);
-      const cr = parseFloat(oldCr);
-
-      if (isNaN(cg) || cg < 0 || cg > 10) {
-        alert("Invalid CGPA entered!");
+      if (cg < 0 || cg > 10) {
+        alert("Invalid CGPA entered! Must be 0-10.");
         return;
       }
-      if (isNaN(cr) || cr < 0) {
+      if (cr < 0) {
         alert("Invalid total credits entered!");
         return;
       }
 
-      document.getElementById("oldCgpa").value = cg;
-      document.getElementById("oldCredits").value = cr;
-
+      // Save values in localStorage
       localStorage.setItem("oldCgpa", cg);
       localStorage.setItem("oldCredits", cr);
 
