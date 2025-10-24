@@ -69,9 +69,6 @@
     .loaded-list-section {
       margin-top: 30px;
     }
-    .loaded-list-section h3 {
-      margin-bottom: 5px;
-    }
     .list-display {
       background-color: #f9f9f9;
       padding: 10px;
@@ -191,7 +188,7 @@
 
     function calculateCGPA() {
       if (entries.length === 0) {
-        alert("No entries available for CGPA calculation.");
+        document.getElementById("output").innerText = "No entries to calculate CGPA.";
         return;
       }
 
@@ -205,6 +202,7 @@
 
       const cgpa = weightedSum / totalCredits;
       document.getElementById("output").innerText = `CGPA: ${cgpa.toFixed(2)} | Total Credits: ${totalCredits.toFixed(1)}`;
+      return { cgpa, totalCredits };
     }
 
     function showInputs() {
@@ -282,8 +280,10 @@
       data.entries.forEach(entry => entries.push(entry));
       currentNote = data.note || "";
       document.getElementById("userNote").value = currentNote;
+
       showInputs();
-      document.getElementById("output").innerText = `Loaded list: ${name}`;
+      const { cgpa, totalCredits } = calculateCGPA(); // ✅ auto calculate on load
+      document.getElementById("output").innerText = `Loaded list: ${name} | CGPA: ${cgpa.toFixed(2)} | Total Credits: ${totalCredits.toFixed(1)}`;
 
       const displayText = data.entries.map((entry, i) =>
         `#${i + 1} ➤ ${entry.grade} (${entry.gradeValue}), ${entry.credit} Cr${entry.course ? ` - ${entry.course}` : ""}`
