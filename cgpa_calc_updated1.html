@@ -6,100 +6,86 @@
   <title>CGPA Calculator</title>
   <style>
     :root {
-      --bg-color: #f3f4f6;
-      --container-bg: #ffffff;
-      --text-color: #333;
-      --button-bg: #6c63ff;
-      --button-hover: #574fce;
-      --border-color: #ccc;
-      --table-header: #f4f4f4;
+      --bg: #f7f6ff;
+      --text: #222;
+      --card: #fff;
+      --accent: #6c63ff;
+      --border: #ddd;
     }
-
     body.dark {
-      --bg-color: #1e1e2f;
-      --container-bg: #2a2a40;
-      --text-color: #e4e4e7;
-      --button-bg: #818cf8;
-      --button-hover: #6366f1;
-      --border-color: #444;
-      --table-header: #3a3a55;
+      --bg: #1e1e2e;
+      --text: #f1f1f1;
+      --card: #2a2a3c;
+      --accent: #a18cd1;
+      --border: #444;
     }
-
     body {
       font-family: "Segoe UI", sans-serif;
-      background: var(--bg-color);
+      background: var(--bg);
+      color: var(--text);
       margin: 0;
       padding: 20px;
       transition: background 0.3s, color 0.3s;
-      color: var(--text-color);
     }
-
     .container {
       max-width: 600px;
-      margin: auto;
-      background: var(--container-bg);
+      margin: 50px auto;
+      background: var(--card);
       padding: 25px;
       border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-      transition: background 0.3s, color 0.3s;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      transition: background 0.3s;
+      position: relative;
     }
-
     h1 {
       text-align: center;
       margin-bottom: 20px;
+      color: var(--text);
     }
-
     label {
       font-weight: 500;
     }
-
     input, select, button {
       padding: 10px;
       margin: 8px 0;
       border-radius: 8px;
-      border: 1px solid var(--border-color);
+      border: 1px solid var(--border);
       width: 100%;
       font-size: 14px;
-      background-color: var(--container-bg);
-      color: var(--text-color);
-      transition: background 0.3s, color 0.3s;
+      background: var(--card);
+      color: var(--text);
+      transition: 0.3s;
     }
-
     button {
-      background-color: var(--button-bg);
+      background-color: var(--accent);
       color: white;
       cursor: pointer;
       border: none;
-      transition: background-color 0.2s;
+      font-weight: 500;
     }
-
     button:hover {
-      background-color: var(--button-hover);
+      opacity: 0.9;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
     }
-
     th, td {
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border);
       text-align: center;
       padding: 8px;
     }
-
     th {
-      background-color: var(--table-header);
+      background-color: rgba(0,0,0,0.05);
     }
-
     .cgpa-box {
       text-align: center;
       margin-top: 20px;
       font-size: 1.1em;
       font-weight: bold;
+      color: var(--text);
     }
-
     .remove-btn {
       background-color: #ef4444;
       color: white;
@@ -108,32 +94,30 @@
       border-radius: 8px;
       cursor: pointer;
     }
-
     .remove-btn:hover {
       background-color: #dc2626;
     }
-
     .theme-toggle {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 15px;
-    }
-
-    .theme-toggle button {
-      width: auto;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-weight: bold;
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 22px;
+      cursor: pointer;
+      user-select: none;
+      transition: 0.3s;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="theme-toggle">
-      <button id="themeToggle">🌙 Dark Mode</button>
-    </div>
-
+    <div class="theme-toggle" id="themeToggle">🌙</div>
     <h1>CGPA Calculator</h1>
+
+    <label>Old CGPA (optional):</label>
+    <input type="number" id="oldCgpa" placeholder="Enter old CGPA" min="0" max="10" step="0.01" />
+
+    <label>Old Total Credits (optional):</label>
+    <input type="number" id="oldCredits" placeholder="Enter old total credits" min="0" step="0.1" />
 
     <label>Course Name (optional):</label>
     <input type="text" id="subjectName" placeholder="Enter course name (optional)" />
@@ -171,33 +155,37 @@
     </table>
 
     <div class="cgpa-box">
-      Total Credits: <span id="totalCredits">0</span><br>
-      Current CGPA: <span id="cgpaDisplay">-</span>
+      Total Credits (including old): <span id="totalCredits">0</span><br>
+      Final CGPA: <span id="cgpaDisplay">-</span>
     </div>
   </div>
 
   <script>
-    let entries = JSON.parse(localStorage.getItem("cgpaData")) || [];
+    let entries = JSON.parse(localStorage.getItem("cgpaEntries")) || [];
 
     function updateTable() {
       const tableBody = document.getElementById("tableBody");
       tableBody.innerHTML = "";
+      let totalCredits = parseFloat(document.getElementById("oldCredits").value) || 0;
+      let totalPoints = totalCredits * (parseFloat(document.getElementById("oldCgpa").value) || 0);
+
       entries.forEach((entry, index) => {
-        const row = `<tr>
+        const row = document.createElement("tr");
+        row.innerHTML = `
           <td>${index + 1}</td>
           <td>${entry.subject || "-"}</td>
           <td>${entry.credits}</td>
-          <td>${getGradeName(entry.grade)}</td>
-          <td><button class="remove-btn" onclick="removeEntry(${index})">Remove</button></td>
-        </tr>`;
-        tableBody.innerHTML += row;
+          <td>${entry.grade}</td>
+          <td><button class="remove-btn" onclick="removeEntry(${index})">X</button></td>
+        `;
+        tableBody.appendChild(row);
+        totalCredits += entry.credits;
+        totalPoints += entry.credits * entry.grade;
       });
-      calculateCGPA();
-    }
 
-    function getGradeName(value) {
-      const map = {10:"A+",9:"A",8:"B+",7:"B",6:"C+",5:"C",4:"D",0:"F"};
-      return map[value] ?? value;
+      document.getElementById("totalCredits").textContent = totalCredits.toFixed(1);
+      document.getElementById("cgpaDisplay").textContent =
+        totalCredits ? (totalPoints / totalCredits).toFixed(2) : "-";
     }
 
     function addEntry() {
@@ -205,68 +193,46 @@
       const credits = parseFloat(document.getElementById("credits").value);
       const grade = parseFloat(document.getElementById("grade").value);
 
-      if (isNaN(credits) || isNaN(grade)) {
-        alert("Please enter valid credits and grade!");
-        return;
-      }
+      if (isNaN(credits) || isNaN(grade)) return alert("Enter valid credits and grade!");
 
       entries.push({ subject, credits, grade });
       updateTable();
-      clearInputs();
-    }
-
-    function removeEntry(index) {
-      entries.splice(index, 1);
-      updateTable();
-    }
-
-    function clearInputs() {
+      saveData();
       document.getElementById("subjectName").value = "";
       document.getElementById("credits").value = "";
       document.getElementById("grade").value = "";
     }
 
-    function calculateCGPA() {
-      if (entries.length === 0) {
-        document.getElementById("cgpaDisplay").innerText = "-";
-        document.getElementById("totalCredits").innerText = "0";
-        return;
-      }
-
-      let totalPoints = 0;
-      let totalCredits = 0;
-      entries.forEach(e => {
-        totalPoints += e.grade * e.credits;
-        totalCredits += e.credits;
-      });
-
-      const cgpa = (totalPoints / totalCredits).toFixed(2);
-      document.getElementById("cgpaDisplay").innerText = cgpa;
-      document.getElementById("totalCredits").innerText = totalCredits.toFixed(1);
+    function removeEntry(index) {
+      entries.splice(index, 1);
+      updateTable();
+      saveData();
     }
 
     function saveData() {
-      localStorage.setItem("cgpaData", JSON.stringify(entries));
-      alert("✅ List saved successfully!");
+      localStorage.setItem("cgpaEntries", JSON.stringify(entries));
+      localStorage.setItem("oldCgpa", document.getElementById("oldCgpa").value);
+      localStorage.setItem("oldCredits", document.getElementById("oldCredits").value);
     }
 
-    // --- DARK THEME TOGGLE ---
-    const themeToggleBtn = document.getElementById("themeToggle");
-    const isDark = localStorage.getItem("theme") === "dark";
-
-    if (isDark) {
-      document.body.classList.add("dark");
-      themeToggleBtn.textContent = "☀️ Light Mode";
-    }
-
-    themeToggleBtn.addEventListener("click", () => {
+    // Theme toggle
+    const themeToggle = document.getElementById("themeToggle");
+    themeToggle.addEventListener("click", () => {
       document.body.classList.toggle("dark");
-      const darkMode = document.body.classList.contains("dark");
-      localStorage.setItem("theme", darkMode ? "dark" : "light");
-      themeToggleBtn.textContent = darkMode ? "☀️ Light Mode" : "🌙 Dark Mode";
+      const isDark = document.body.classList.contains("dark");
+      themeToggle.textContent = isDark ? "☀️" : "🌙";
+      localStorage.setItem("theme", isDark ? "dark" : "light");
     });
 
-    window.onload = updateTable;
+    window.onload = () => {
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark");
+        themeToggle.textContent = "☀️";
+      }
+      document.getElementById("oldCgpa").value = localStorage.getItem("oldCgpa") || "";
+      document.getElementById("oldCredits").value = localStorage.getItem("oldCredits") || "";
+      updateTable();
+    };
   </script>
 </body>
 </html>
