@@ -10,92 +10,119 @@
     font-family: Arial, sans-serif;
     background: #121212;
     color: white;
+    margin: 0;
+    padding: 0;
   }
+
   .container {
-    max-width: 850px;
+    max-width: 900px;
     margin: 30px auto;
     background: #1e1e1e;
     padding: 20px;
     border-radius: 12px;
   }
+
+  h1 { text-align: center; }
+
   input, select, button {
     padding: 8px;
     margin: 5px;
     border-radius: 6px;
     border: none;
   }
-  input, select { background: #2c2c2c; color: white; }
-  button { cursor: pointer; font-weight: bold; }
+
+  input, select {
+    background: #2c2c2c;
+    color: white;
+  }
+
+  button {
+    cursor: pointer;
+    font-weight: bold;
+  }
+
   .green-btn { background: #2ecc71; }
   .red-btn { background: #e74c3c; }
+
   table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
   }
+
   th, td {
     border: 1px solid #444;
     padding: 8px;
     text-align: center;
   }
+
   .row {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
   }
+
   .result {
     text-align: center;
     font-size: 1.2em;
-    margin-top: 10px;
+    margin-top: 15px;
+    font-weight: bold;
   }
 </style>
 </head>
 
 <body>
 <div class="container">
-  <h1 style="text-align:center">CGPA Calculator</h1>
 
-  <!-- OLD CGPA -->
+  <h1>CGPA Calculator</h1>
+
+  <!-- ADD OLD CGPA -->
   <div class="row">
-    <input id="oldCgpa" type="number" placeholder="Old CGPA" step="0.01">
-    <input id="oldCredits" type="number" placeholder="Old Credits" step="0.5">
-    <button class="green-btn" onclick="addOldCgpa()">Add Old CGPA</button>
-    <button class="red-btn" onclick="deleteOldCgpa()">Delete Old CGPA</button>
+    <input id="oldCgpa" type="number" placeholder="Old CGPA" step="0.01" min="0" max="10">
+    <input id="oldCredits" type="number" placeholder="Old Credits" step="0.5" min="0">
+    <button class="green-btn" onclick="addOldCgpa()">➕ Add Old CGPA</button>
   </div>
 
   <hr>
 
-  <!-- COURSE -->
+  <!-- ADD COURSE -->
   <div class="row">
-    <input id="courseName" placeholder="Course name">
-    <input id="credits" type="number" placeholder="Credits" step="0.5">
+    <input id="courseName" placeholder="Course name (optional)">
+    <input id="credits" type="number" placeholder="Credits" step="0.5" min="0">
     <select id="grade">
       <option>A+</option><option>A</option><option>B+</option>
       <option>B</option><option>C+</option><option>C</option>
       <option>D</option><option>F</option>
     </select>
-    <button class="green-btn" onclick="addCourse()">Add</button>
+    <button class="green-btn" onclick="addCourse()">Add Course</button>
   </div>
 
   <!-- TABLE -->
   <table>
     <thead>
       <tr>
-        <th>#</th><th>Course</th><th>Credits</th>
-        <th>Grade</th><th>Score</th><th>Action</th>
+        <th>#</th>
+        <th>Name</th>
+        <th>Credits</th>
+        <th>Grade</th>
+        <th>Score</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody id="courseTable"></tbody>
   </table>
 
+  <!-- RESULT -->
   <div class="result">
     <div id="totalCredits">Total Credits: 0</div>
     <div id="cgpa">CGPA: 0.00</div>
   </div>
+
 </div>
 
 <script>
   let courses = [];
+  let oldCgpaCount = 1;
 
   const gradePoints = {
     "A+":10, "A":9, "B+":8,
@@ -107,24 +134,27 @@
     const cg = parseFloat(document.getElementById("oldCgpa").value);
     const cr = parseFloat(document.getElementById("oldCredits").value);
 
-    if (isNaN(cg) || cg < 0 || cg > 10) return alert("Invalid CGPA");
-    if (isNaN(cr) || cr <= 0) return alert("Invalid Credits");
+    if (isNaN(cg) || cg < 0 || cg > 10) {
+      alert("Invalid CGPA");
+      return;
+    }
 
-    courses = courses.filter(c => !c.isOld);
+    if (isNaN(cr) || cr <= 0) {
+      alert("Invalid Credits");
+      return;
+    }
 
-    courses.unshift({
-      name: "Previous CGPA",
+    courses.push({
+      name: `Previous CGPA (${oldCgpaCount++})`,
       credits: cr,
       grade: "OLD",
       score: cg * cr,
       isOld: true
     });
 
-    updateTable();
-  }
+    document.getElementById("oldCgpa").value = "";
+    document.getElementById("oldCredits").value = "";
 
-  function deleteOldCgpa() {
-    courses = courses.filter(c => !c.isOld);
     updateTable();
   }
 
@@ -133,14 +163,20 @@
     const credits = parseFloat(document.getElementById("credits").value);
     const grade = document.getElementById("grade").value;
 
-    if (isNaN(credits) || credits <= 0) return alert("Invalid credits");
+    if (isNaN(credits) || credits <= 0) {
+      alert("Invalid Credits");
+      return;
+    }
 
-    courses.push({ name, credits, grade });
+    courses.push({ name, credits, grade, isOld: false });
+    document.getElementById("courseName").value = "";
+    document.getElementById("credits").value = "";
+
     updateTable();
   }
 
-  function deleteCourse(i) {
-    courses.splice(i, 1);
+  function deleteCourse(index) {
+    courses.splice(index, 1);
     updateTable();
   }
 
@@ -159,20 +195,25 @@
 
       table.innerHTML += `
         <tr>
-          <td>${i+1}</td>
+          <td>${i + 1}</td>
           <td>${c.name}</td>
           <td>${c.credits}</td>
           <td>${c.isOld ? "—" : c.grade}</td>
           <td>${score.toFixed(2)}</td>
-          <td><button class="red-btn" onclick="deleteCourse(${i})">Delete</button></td>
+          <td>
+            <button class="red-btn" onclick="deleteCourse(${i})">Delete</button>
+          </td>
         </tr>
       `;
     });
 
+    const cgpa = totalCredits ? totalScore / totalCredits : 0;
+
     document.getElementById("totalCredits").innerText =
-      `Total Credits: ${totalCredits}`;
+      `Total Credits: ${totalCredits.toFixed(2)}`;
+
     document.getElementById("cgpa").innerText =
-      `CGPA: ${(totalScore / (totalCredits || 1)).toFixed(2)}`;
+      `CGPA: ${cgpa.toFixed(2)}`;
   }
 </script>
 </body>
