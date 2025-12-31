@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Wordle Clone</title>
+
+<style>
+body {
+    background: #121213;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+}
+
+h1 { margin-top: 20px; }
+
+#board {
+    margin: 20px auto;
+    width: 260px;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+.tile {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #3a3a3c;
+    margin: 2px;
+    font-size: 28px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.green { background: #538d4e; }
+.yellow { background: #b59f3b; }
+.gray { background: #3a3a3c; }
+
+#keyboard {
+    width: 500px;
+    margin: 20px auto;
+}
+
+.key {
+    padding: 10px;
+    margin: 4px;
+    background: #818384;
+    border-radius: 5px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+#nextBtn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #538d4e;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>WORDLE</h1>
+
+<div id="board"></div>
+<div id="keyboard"></div>
+
+<button id="nextBtn">Next Word 🔁</button>
+
+<script>
+const WORD_LIST = [
+  "SIREN", "RIVER", "TIRED", "FIRED", "WIRED",
+  "RIDER", "MIXER", "CHAIR", "RIGHT", "BRAVE",
+  "PLANE", "STONE", "ALERT", "POWER", "NIGHT"
+];
+
+let WORD = "";
+let row = 0, col = 0;
+
+const board = document.getElementById("board");
+const keyboard = document.getElementById("keyboard");
+
+function getRandomWord() {
+    return WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
+}
+
+function createBoard() {
+    board.innerHTML = "";
+    for (let i = 0; i < 6; i++) {
+        const r = document.createElement("div");
+        r.className = "row";
+        for (let j = 0; j < 5; j++) {
+            const t = document.createElement("div");
+            t.className = "tile";
+            r.appendChild(t);
+        }
+        board.appendChild(r);
+    }
+}
+
+function createKeyboard() {
+    keyboard.innerHTML = "";
+    const keys = "QWERTYUIOPASDFGHJKLZXCVBNM";
+    keys.split("").forEach(k => {
+        const key = document.createElement("div");
+        key.className = "key";
+        key.innerText = k;
+        key.onclick = () => pressKey(k);
+        keyboard.appendChild(key);
+    });
+
+    const enter = document.createElement("div");
+    enter.className = "key";
+    enter.innerText = "ENTER";
+    enter.onclick = checkWord;
+    keyboard.appendChild(enter);
+
+    const del = document.createElement("div");
+    del.className = "key";
+    del.innerText = "DEL";
+    del.onclick = deleteLetter;
+    keyboard.appendChild(del);
+}
+
+function pressKey(letter) {
+    if (col < 5) {
+        board.children[row].children[col].innerText = letter;
+        col++;
+    }
+}
+
+function deleteLetter() {
+    if (col > 0) {
+        col--;
+        board.children[row].children[col].innerText = "";
+    }
+}
+
+function checkWord() {
+    if (col < 5) return;
+
+    let guess = [];
+    for (let i = 0; i < 5; i++) {
+        guess.push(board.children[row].children[i].innerText);
+    }
+
+    for (let i = 0; i < 5; i++) {
+        const tile = board.children[row].children[i];
+        if (guess[i] === WORD[i]) tile.className = "tile green";
+        else if (WORD.includes(guess[i])) tile.className = "tile yellow";
+        else tile.className = "tile gray";
+    }
+
+    if (guess.join("") === WORD) {
+        alert("🎉 Correct!");
+        return;
+    }
+
+    row++;
+    col = 0;
+
+    if (row === 6) alert("❌ Word was: " + WORD);
+}
+
+function resetGame() {
+    WORD = getRandomWord();
+    row = 0;
+    col = 0;
+    createBoard();
+}
+
+document.getElementById("nextBtn").onclick = resetGame;
+
+// Init
+WORD = getRandomWord();
+createBoard();
+createKeyboard();
+</script>
+
+</body>
+</html>
