@@ -86,9 +86,99 @@ h1 { margin-top: 20px; }
 
 <script>
 const WORD_LIST = [
-  "SIREN", "RIVER", "TIRED", "FIRED", "WIRED",
-  "RIDER", "MIXER", "CHAIR", "RIGHT", "BRAVE",
-  "PLANE", "STONE", "ALERT", "POWER", "NIGHT"
+  "SIREN", "RIVER", "TIRED", "FIRED", "WIRED", "RIDER", "MIXER", "CHAIR", "RIGHT", "BRAVE", 
+  "PLANE", "STONE", "ALERT", "POWER", "NIGHT", "LIGHT", "SOUND", "WATER", "EARTH", "FLAME",
+  "BREAD", "FRUIT", "GRAPE", "MELON", "LEMON", "SHARP", "SMART", "CLEAN", "FRESH", "BRIGHT",
+  "CLOUD", "STORM", "WINDY", "SUNNY", "RAINY", "GHOST", "DREAM", "SLEEP", "WATCH", "CLOCK",
+  "TABLE", "PLATE", "SPOON", "KNIFE", "FORKY", "PIZZA", "PASTA", "ROAST", "BAKER", "SWEET",
+  "CANDY", "SUGAR", "SPICE", "HONEY", "BERRY", "LEAFY", "PLANT", "FLOWER", "GRASS", "TREES",
+  "HOUSE", "CABIN", "LODGE", "BRICK", "PAINT", "BRUSH", "GLOVE", "SHIRT", "PANTS", "SHOES",
+  "TRAIN", "TRUCK", "PLANE", "MOTOR", "CYCLE", "BEACH", "OCEAN", "RIVER", "LAKES", "COAST",
+  "PIANO", "MUSIC", "DANCE", "STAGE", "MOVIE", "HEART", "SMILE", "LAUGH", "TOUCH", "SIGHT",
+  "SMELL", "TASTE", "VOICE", "WORDS", "BOOKS", "PAPER", "WRITE", "LEARN", "STUDY", "THINK",
+  "SPACE", "STARS", "MOONS", "EARTH", "MARS", "ALIEN", "PILOT", "RADAR", "RADIO", "PHONE",
+  "CABLE", "MOUSE", "BOARD", "SCREEN", "LOGIC", "ERROR", "CLICK", "PRESS", "ENTER", "SHIFT",
+  "MATCH", "SPORT", "GAMES", "PRIZE", "SCORE", "CLIMB", "JUMPY", "SWIFT", "QUICK", "FASTY",
+  "LARGE", "SMALL", "SHORT", "THICK", "THINS", "HEAVY", "LIGHT", "ROUGH", "ROUND", "SQUAR",
+  "GREEN", "BLUEY", "BLACK", "WHITE", "BROWY", "FRONT", "BACKS", "SIDES", "NORTH", "SOUTH",
+  "CHEST", "LUNGS", "BRAIN", "BONES", "SKINS", "POINT", "SHAPE", "FRAME", "BLOCK", "LINES",
+  "MONEY", "PRICE", "VALUE", "STOCK", "TRADE", "METAL", "STEEL", "GOLDY", "SILVR", "IRONV",
+  "BOTTLE", "GLASS", "CUPPY", "BOWLS", "STOVE", "FRYING", "STEAM", "SMOKE", "FLAME", "FIRES",
+  "ANGRY", "HAPPY", "SADLY", "CRAZY", "CALMY", "BRAVE", "PROUD", "SHYLY", "QUIET", "LOUDY",
+  "BUNCH", "GROUP", "CROWD", "TOTAL", "COUNT", "FIRST", "THIRD", "FIFTH", "SIXTH", "TENTH",
+  "PEACE", "WORLD", "TRUTH", "FAITH", "TRUST", "PRIDE", "GRACE", "LIGHT", "FORCE", "POWER",
+  "BREAD", "CRUST", "GRAIN", "WHEAT", "FLOUR", "CHEEK", "MOUTH", "TOOTH", "EYESY", "HANDS",
+  "WRIST", "ELBOW", "KNEES", "ANKLE", "BLOOD", "NERVE", "ORGAN", "GLAND", "CELLS", "VIRUS",
+  "CUREY", "PILLS", "NURSE", "CLINIC", "WARDS", "FIELD", "FENCE", "GATEY", "YARDS", "LAWNS",
+  "IMAGE", "PHOTO", "VIDEO", "AUDIO", "TRACK", "ALBUM", "SONGS", "GENRE", "BLUES", "JAZZY",
+  "BACON", "STEAK", "CHOPS", "CHICK", "LIVER", "APPLE", "PEARS", "PEACH", "PLUMS", "BERRY",
+  "DONUT", "CAKES", "FUDGE", "JELLY", "SYRUP", "OUNCE", "POUND", "GRAMS", "LITRE", "METER",
+  "SHORE", "SHELL", "SANDY", "WAVES", "TIDES", "BOATS", "SHIPS", "SAILS", "DOCKS", "PORTS",
+  "CLOUY", "MISTY", "FOGGY", "FROST", "SNOWY", "WINTER", "SPRIN", "SUMME", "AUTUM", "FALLS",
+  "CHAIR", "DESKS", "LAMPS", "SHELF", "DOORS", "FLOOR", "ROOFS", "WALLS", "STAIR", "ROOMS",
+  "COUCH", "BEDDY", "SLEEP", "PILLO", "SHEET", "BLANK", "TOWEL", "SOAPY", "CLEAN", "WASHY",
+  "DRYER", "IRONS", "SWEEP", "DUSTS", "TRASH", "BASIC", "EXTRA", "LOCAL", "MAJOR", "MINOR",
+  "LEGAL", "CIVIL", "RULES", "LAWSY", "CRIME", "GUARD", "POLIC", "JUDGE", "COURT", "TRIAL",
+  "AGENT", "STAFF", "OWNER", "CHIEF", "BOSSV", "GUEST", "USERY", "ADMIN", "LOGIN", "EMAIL",
+  "SITES", "WEBSV", "LINKS", "POSTS", "BLOGS", "TWEET", "MEDIA", "PHOTO", "CLIPS", "VIEWS",
+  "BRASS", "BRONZ", "COPPE", "GLASS", "PLAST", "WOODS", "STONE", "ROCKS", "CLAYS", "BRICK",
+  "SHADE", "SHADO", "LIGHT", "GLARE", "GLOSS", "ROUGH", "SMOOT", "HARDY", "SOFTY", "TOUGH",
+  "DENSE", "CLEAR", "SOLID", "FLUID", "GASES", "STEAM", "VAPOR", "ATOMS", "MOLEC", "SPACE",
+  "EARTH", "SOLAR", "PLANV", "ORBIT", "STARS", "GALAXY", "COMET", "FLARE", "PILOT", "FLIGH",
+  "WINGS", "TAILS", "ENGIY", "FUELV", "CABIN", "BIRDS", "EAGLE", "HAWKS", "OWLSY", "DUCKS",
+  "BEARS", "TIGER", "LIONS", "WOLFS", "DEERS", "HORSE", "ZEBRA", "SNAKE", "WHALE", "SHARK",
+  "MOUSE", "RATSV", "FROGS", "TOADS", "FISHY", "CRABS", "SHELL", "WINGS", "BEAKS", "CLAWS",
+  "NORTH", "SOUTH", "EASTV", "WESTV", "MAPSY", "GLOBE", "LANDS", "ZONES", "AREAS", "PLACE",
+  "CHART", "GRAPH", "INDEX", "LISTS", "FILES", "FOLDY", "TOOLS", "HAMME", "SCREW", "DRILL",
+  "BLADE", "SAWSV", "GEARS", "CHAIN", "BOLTS", "KNOTS", "ROPES", "WIRES", "PIPES", "TUBES",
+  "BOXES", "CASES", "BAGSV", "PACKS", "LOADS", "LEVEL", "ANGLE", "SHAPE", "CURVE", "CROSS",
+  "ROUND", "OVALS", "CUBES", "CONES", "SIDES", "FRONT", "INNER", "OUTER", "UPPER", "LOWER",
+  "DRAMA", "ACTOR", "SCENE", "PLAYS", "FILMS", "MAGIC", "TRICK", "SHOWS", "EVENT", "PARTY",
+  "PRIZE", "AWARD", "GAMES", "TOYSV", "CARDS", "DICES", "CHESS", "MATCH", "BOARD", "TEAMS",
+  "COACH", "PLAYR", "FANSV", "SPORT", "TRACK", "FIELD", "COURT", "GYMSV", "BALLS", "GOALS",
+  "HEART", "MINDY", "SOULS", "SPIRV", "BODYS", "BLOOD", "BRAIN", "BONES", "SKINS", "HEADS",
+  "HANDS", "FEETV", "ARMSV", "LEGSV", "FINGR", "VOICE", "SOUND", "NOISE", "MUSIC", "TONES",
+  "RADIO", "PHONE", "CALLS", "TEXTS", "CHATS", "SMILE", "LAUGH", "TEARS", "CRYIN", "SCARE",
+  "ANGER", "HATEY", "LOVES", "PEACE", "HOPEY", "DREAM", "NIGHT", "DAYSV", "HOURS", "CLOCK",
+  "WATCH", "YEARS", "MONTH", "WEEKS", "TODAY", "DAILY", "FRESH", "NEWLY", "YOUNG", "OLDER",
+  "CLEAN", "DIRTY", "SWEET", "SOURY", "SALTY", "BITTE", "SPICY", "HOTLY", "COLDY", "WARMY",
+  "RAINY", "SNOWY", "WINDY", "STORM", "SUNNY", "CLOUD", "SKYLY", "SPACE", "STARS", "MOONS",
+  "PLANT", "TREES", "LEAFY", "ROOTS", "FRUIT", "SEEDS", "GRASS", "FLOWR", "GREEN", "WOODS",
+  "RIVER", "LAKES", "OCEAN", "BEACH", "SANDY", "ROCKS", "HILLS", "MOUNT", "VALLE", "CAVES",
+  "ROADS", "STREE", "PATHS", "TRACK", "TRAIN", "TRUCK", "CARSV", "BUSES", "PLANE", "BOATS",
+  "HOUSE", "BUILD", "ROOMS", "FLOOR", "WALLS", "ROOFS", "DOORS", "GLASS", "PAINT", "BRICK",
+  "MONEY", "CASHY", "BANKS", "PRICE", "SALES", "TRADE", "STOCK", "WORKY", "JOB SV", "OFFIC",
+  "BOOKS", "PAPER", "WRITE", "READS", "LEARN", "STUDY", "CLASS", "TEACH", "MATHS", "LOGIC",
+  "MUSIC", "SONGS", "DANCE", "PLAYS", "ARTSY", "PAINT", "DRAWN", "PHOTO", "VIDEO", "RADIO",
+  "TABLE", "CHAIR", "DESKS", "SHELF", "BEDSV", "LAMPS", "CLOCK", "PHONE", "TOOLS", "BAGSV",
+  "CLOTH", "SHIRT", "PANTS", "SHOES", "WATCH", "RINGS", "GOLDY", "SILVR", "BRASS", "IRONV",
+  "BREAD", "MILKV", "EGGSV", "FRUIT", "APPLE", "WATER", "JUICE", "DRINK", "FOODS", "MEALS",
+  "SPOON", "FORKV", "KNIFE", "PLATE", "BOWLS", "CUPPY", "GLASS", "STOVE", "OVENY", "COOKS",
+  "SHARP", "QUICK", "SLOWY", "HEAVY", "LIGHT", "SMALL", "LARGE", "SHORT", "LONGS", "BROAD",
+  "THICK", "THINS", "ROUND", "SQUAR", "SHAPE", "POINT", "SOLID", "FLUID", "POWER", "FORCE",
+  "READY", "START", "BEGIN", "STOPS", "PAUSE", "CLOSE", "OPENY", "ENTRY", "EXITV", "FRONT",
+  "BRAVE", "SMART", "FUNNY", "HAPPY", "KINDY", "GREAT", "SUPER", "BESTY", "TOTAL", "COUNT",
+  "CHECK", "FIXED", "CLEAN", "DIRTY", "EMPTY", "FULLS", "FIRST", "LASTY", "MIDDLE", "RIGHT",
+  "LEFTS", "NORTH", "SOUTH", "EASTV", "WESTV", "GLOBE", "WORLD", "HUMAN", "PEOPL", "WOMAN",
+  "CHILD", "ADULT", "FAMILY", "FRIEN", "GROUP", "PARTY", "EVENT", "STORY", "WORDS", "SPEAK",
+  "TALKS", "SOUND", "VOICE", "IMAGE", "COLOR", "BLACK", "WHITE", "GREEN", "BLUEY", "REDDY",
+  "APPLE", "BANAN", "BERRY", "GRAPE", "LEMON", "MELON", "ORANG", "PEACH", "PEARS", "PLUMS",
+  "BEANS", "CHILL", "CORNV", "ONION", "POTAT", "RICEV", "SALAD", "SOUPY", "SPICE", "WHEAT",
+  "CANDY", "CHOCO", "CAKES", "DONUT", "HONEY", "JELLY", "SUGAR", "SWEET", "SYRUP", "WAFFL",
+  "CHICK", "BEEFV", "ROAST", "STEAK", "BACON", "LIVER", "FISHY", "CRABS", "SHRIP", "SQUID",
+  "PILOT", "PLANE", "SHIPS", "TRAIN", "TRUCK", "BUSES", "MOTOR", "BIKES", "CYCLE", "DRIVE",
+  "HOTEL", "LODGE", "CABIN", "CAMPV", "TENTS", "PARKS", "BEACH", "COAST", "ISLAN", "RIVER",
+  "ACTOR", "DANCE", "MUSIC", "PIANO", "GUITA", "DRUMS", "STAGE", "MOVIE", "RADIO", "VIDEO",
+  "CHESS", "CARDS", "GAMES", "MATCH", "SPORT", "TEAMS", "COACH", "SCORE", "PRIZE", "AWARD",
+  "ALARM", "CLOCK", "WATCH", "TIMER", "NIGHT", "DAILY", "TODAY", "YEARS", "MONTH", "WEEKS",
+  "HEART", "LUNGS", "BRAIN", "BONES", "SKINS", "BLOOD", "NERVE", "ORGAN", "GLANS", "CELLS",
+  "CHAIR", "TABLE", "SHELF", "DESKS", "COUCH", "BEDSV", "LAMPS", "CLOCK", "FRAME", "VASEY",
+  "CLOTH", "SHIRT", "PANTS", "SHOES", "COATS", "DRESS", "SKIRT", "GLOVE", "SCARF", "BELTS",
+  "PHONE", "MOUSE", "BOARD", "PRINT", "FILES", "FOLDY", "EMAILS", "LINKS", "SITES", "WEBSV",
+  "SPACE", "STARS", "MOONS", "EARTH", "PLANV", "ORBIT", "COMET", "FLARE", "ALIEN", "RADAR",
+  "BASIC", "EXTRA", "CLEAR", "FINAL", "TOTAL", "LOCAL", "MAJOR", "MINOR", "LEGAL", "CIVIL",
+  "BIRDS", "EAGLE", "HAWKS", "OWLSV", "DUCKS", "SWANS", "CRANE", "ROBIN", "DOVES", "CROWS",
+  "TIGER", "LIONS", "BEARS", "WOLFS", "DEERS", "HORSE", "ZEBRA", "SNAKE", "WHALE", "SHARK"
 ];
 
 let WORD = "";
@@ -144,6 +234,7 @@ function createKeyboard() {
 
 function pressKey(letter) {
     if (gameOver || col >= 5) return;
+    status.innerText = "";
     board.children[row].children[col].innerText = letter;
     col++;
 }
@@ -158,15 +249,20 @@ function deleteLetter() {
 function checkWord() {
     if (col < 5 || gameOver) return;
 
-    let guess = [];
+    let guess = "";
+    for (let i = 0; i < 5; i++)
+        guess += board.children[row].children[i].innerText;
+
+    // ❌ Invalid word
+    if (!WORD_LIST.includes(guess)) {
+        status.innerText = "❌ Not a valid word!";
+        return;
+    }
+
     let wordArr = WORD.split("");
     let result = Array(5).fill("gray");
 
-    for (let i = 0; i < 5; i++) {
-        guess.push(board.children[row].children[i].innerText);
-    }
-
-    // PASS 1 – Green
+    // Pass 1 → Green
     for (let i = 0; i < 5; i++) {
         if (guess[i] === wordArr[i]) {
             result[i] = "green";
@@ -174,21 +270,20 @@ function checkWord() {
         }
     }
 
-    // PASS 2 – Yellow
+    // Pass 2 → Yellow
     for (let i = 0; i < 5; i++) {
         if (result[i] === "green") continue;
-        const idx = wordArr.indexOf(guess[i]);
+        let idx = wordArr.indexOf(guess[i]);
         if (idx !== -1) {
             result[i] = "yellow";
             wordArr[idx] = null;
         }
     }
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i++)
         board.children[row].children[i].className = "tile " + result[i];
-    }
 
-    if (guess.join("") === WORD) {
+    if (guess === WORD) {
         status.innerText = "🎉 Correct! Click Next Word";
         gameOver = true;
         return;
@@ -220,7 +315,7 @@ document.addEventListener("keydown", e => {
 
 document.getElementById("nextBtn").onclick = resetGame;
 
-// INIT
+// Init
 WORD = getRandomWord();
 createBoard();
 createKeyboard();
