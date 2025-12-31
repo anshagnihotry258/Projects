@@ -11,12 +11,29 @@ body {
     font-family: Arial;
     text-align: center;
 }
+
 h1 { margin-top: 20px; }
-#status { margin-top: 10px; font-size: 18px; color: #4caf50; }
-#board { margin: 20px auto; width: 260px; }
-.row { display: flex; justify-content: center; margin-bottom: 5px; }
+
+#status {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #4caf50;
+}
+
+#board {
+    margin: 20px auto;
+    width: 260px;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
 .tile {
-    width: 50px; height: 50px;
+    width: 50px;
+    height: 50px;
     border: 2px solid #3a3a3c;
     margin: 2px;
     font-size: 28px;
@@ -25,11 +42,16 @@ h1 { margin-top: 20px; }
     align-items: center;
     justify-content: center;
 }
+
 .green { background: #538d4e; }
 .yellow { background: #b59f3b; }
 .gray { background: #3a3a3c; }
 
-#keyboard { width: 500px; margin: 20px auto; }
+#keyboard {
+    width: 500px;
+    margin: 20px auto;
+}
+
 .key {
     padding: 10px;
     margin: 4px;
@@ -38,6 +60,7 @@ h1 { margin-top: 20px; }
     display: inline-block;
     cursor: pointer;
 }
+
 #nextBtn {
     margin-top: 15px;
     padding: 10px 20px;
@@ -61,10 +84,8 @@ h1 { margin-top: 20px; }
 
 <button id="nextBtn">Next Word 🔁</button>
 
-<!-- Load words first -->
-<script src="words.js"></script>
-
 <script>
+let WORD_LIST = [];
 let WORD = "";
 let row = 0, col = 0;
 let gameOver = false;
@@ -73,8 +94,25 @@ const board = document.getElementById("board");
 const keyboard = document.getElementById("keyboard");
 const status = document.getElementById("status");
 
-function getRandomWord() {
-    return WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
+/* ---------- LOAD DICTIONARY ---------- */
+fetch("words.json")
+  .then(res => res.json())
+  .then(data => {
+      WORD_LIST = Object.keys(data)
+        .map(w => w.toUpperCase())
+        .filter(w => w.length === 5 && /^[A-Z]+$/.test(w));
+
+      startGame();
+  });
+
+/* ---------- GAME SETUP ---------- */
+function startGame() {
+    WORD = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
+    row = col = 0;
+    gameOver = false;
+    status.innerText = "";
+    createBoard();
+    createKeyboard();
 }
 
 function createBoard() {
@@ -116,6 +154,7 @@ function createKeyboard() {
     keyboard.appendChild(del);
 }
 
+/* ---------- INPUT ---------- */
 function pressKey(letter) {
     if (gameOver || col >= 5) return;
     status.innerText = "";
@@ -130,9 +169,9 @@ function deleteLetter() {
     }
 }
 
+/*GAME LOGIC*/
 function checkWord() {
     if (col < 5 || gameOver) return;
-
     let guess = "";
     for (let i = 0; i < 5; i++)
         guess += board.children[row].children[i].innerText;
@@ -141,17 +180,14 @@ function checkWord() {
         status.innerText = "❌ Not a valid word!";
         return;
     }
-
     let wordArr = WORD.split("");
     let result = Array(5).fill("gray");
-
     for (let i = 0; i < 5; i++) {
         if (guess[i] === wordArr[i]) {
             result[i] = "green";
             wordArr[i] = null;
         }
     }
-
     for (let i = 0; i < 5; i++) {
         if (result[i] === "green") continue;
         let idx = wordArr.indexOf(guess[i]);
@@ -160,16 +196,14 @@ function checkWord() {
             wordArr[idx] = null;
         }
     }
-
     for (let i = 0; i < 5; i++)
         board.children[row].children[i].className = "tile " + result[i];
 
     if (guess === WORD) {
-        status.innerText = "🎉 Correct!";
+        status.innerText = "🎉 Correct! Click Next Word";
         gameOver = true;
         return;
     }
-
     row++;
     col = 0;
 
@@ -178,28 +212,13 @@ function checkWord() {
         gameOver = true;
     }
 }
-
-function resetGame() {
-    WORD = getRandomWord();
-    row = 0;
-    col = 0;
-    gameOver = false;
-    status.innerText = "";
-    createBoard();
-}
-
 document.addEventListener("keydown", e => {
     if (e.key === "Backspace") deleteLetter();
     else if (e.key === "Enter") checkWord();
     else if (/^[a-zA-Z]$/.test(e.key)) pressKey(e.key.toUpperCase());
 });
 
-document.getElementById("nextBtn").onclick = resetGame;
-
-// Init
-WORD = getRandomWord();
-createBoard();
-createKeyboard();
+document.getElementById("nextBtn").onclick = startGame;
 </script>
 
 </body>
