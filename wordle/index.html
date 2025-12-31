@@ -169,9 +169,10 @@ function deleteLetter() {
     }
 }
 
-/*GAME LOGIC*/
+/* ---------- GAME LOGIC ---------- */
 function checkWord() {
     if (col < 5 || gameOver) return;
+
     let guess = "";
     for (let i = 0; i < 5; i++)
         guess += board.children[row].children[i].innerText;
@@ -180,14 +181,19 @@ function checkWord() {
         status.innerText = "❌ Not a valid word!";
         return;
     }
+
     let wordArr = WORD.split("");
     let result = Array(5).fill("gray");
+
+    // Pass 1: Green
     for (let i = 0; i < 5; i++) {
         if (guess[i] === wordArr[i]) {
             result[i] = "green";
             wordArr[i] = null;
         }
     }
+
+    // Pass 2: Yellow
     for (let i = 0; i < 5; i++) {
         if (result[i] === "green") continue;
         let idx = wordArr.indexOf(guess[i]);
@@ -196,6 +202,7 @@ function checkWord() {
             wordArr[idx] = null;
         }
     }
+
     for (let i = 0; i < 5; i++)
         board.children[row].children[i].className = "tile " + result[i];
 
@@ -204,6 +211,7 @@ function checkWord() {
         gameOver = true;
         return;
     }
+
     row++;
     col = 0;
 
@@ -212,6 +220,8 @@ function checkWord() {
         gameOver = true;
     }
 }
+
+/* ---------- CONTROLS ---------- */
 document.addEventListener("keydown", e => {
     if (e.key === "Backspace") deleteLetter();
     else if (e.key === "Enter") checkWord();
