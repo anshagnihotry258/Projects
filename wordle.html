@@ -178,6 +178,19 @@ function resetGame() {
     col = 0;
     createBoard();
 }
+document.addEventListener("keydown", (e) => {
+    let key = e.key.toUpperCase();
+
+    if (key === "BACKSPACE") {
+        deleteLetter();
+    } 
+    else if (key === "ENTER") {
+        checkWord();
+    } 
+    else if (key.length === 1 && key >= "A" && key <= "Z") {
+        pressKey(key);
+    }
+});
 
 document.getElementById("nextBtn").onclick = resetGame;
 
@@ -189,3 +202,4 @@ createKeyboard();
 
 </body>
 </html>
+
