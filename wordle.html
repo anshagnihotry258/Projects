@@ -160,12 +160,6 @@ function checkWord() {
         else if (WORD.includes(guess[i])) tile.className = "tile yellow";
         else tile.className = "tile gray";
     }
-
-    if (guess.join("") === WORD) {
-        alert("🎉 Correct!");
-        return;
-    }
-
     row++;
     col = 0;
 
@@ -202,4 +196,5 @@ createKeyboard();
 
 </body>
 </html>
+
 
