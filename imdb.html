@@ -108,101 +108,99 @@
     </div>
 
 <script>
-    const KEY = '580602b5';
+const KEY = '580602b5';
+const API = 'https://cors.isomorphic-git.org/https://www.omdbapi.com/';
 
-    async function searchShow() {
-        const val = document.getElementById('query').value;
-        const status = document.getElementById('status');
-        const container = document.getElementById('mainContainer');
-        
-        if(!val) return;
-        status.innerText = "Loading series data...";
-        container.style.display = 'none';
+async function searchShow() {
+    const val = document.getElementById('query').value.trim();
+    const status = document.getElementById('status');
+    const container = document.getElementById('mainContainer');
 
-        try {
-            // Try direct title lookup first (more reliable for specific names)
-            let res = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&t=${encodeURIComponent(val)}&type=series`);
-            let data = await res.json();
+    if (!val) return;
 
-            // If direct lookup fails, try search
-            if (data.Response === "False") {
-                const searchRes = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&s=${encodeURIComponent(val)}&type=series`);
-                const searchData = await searchRes.json();
-                if(searchData.Response === "True") {
-                    res = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&i=${searchData.Search[0].imdbID}`);
-                    data = await res.json();
-                } else {
-                    status.innerText = "Series not found. Try a more specific name.";
-                    return;
-                }
-            }
+    status.innerText = "Loading series data...";
+    container.style.display = 'none';
 
-            // Fill Sidebar
-            document.getElementById('poster').src = data.Poster !== "N/A" ? data.Poster : '';
-            document.getElementById('title').innerText = data.Title;
-            document.getElementById('meta').innerText = `${data.Year} • ${data.totalSeasons} Seasons`;
-            document.getElementById('rating').innerText = `★ ${data.imdbRating} (${data.imdbVotes})`;
+    try {
+        let res = await fetch(`${API}?apikey=${KEY}&t=${encodeURIComponent(val)}&type=series`);
+        let data = await res.json();
 
-            const totalSeasons = parseInt(data.totalSeasons);
-            const seasonData = [];
+        if (data.Response === "False") {
+            status.innerText = "Series not found. Try exact name.";
+            return;
+        }
 
-            // Fetch Seasons
-            for (let i = 1; i <= totalSeasons; i++) {
-                status.innerText = `Loading Season ${i}...`;
-                const sRes = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&i=${data.imdbID}&Season=${i}`);
-                seasonData.push(await sRes.json());
-            }
+        // Sidebar
+        poster.src = data.Poster !== "N/A" ? data.Poster : "";
+        title.innerText = data.Title;
+        meta.innerText = `${data.Year} • ${data.totalSeasons} Seasons`;
+        rating.innerText = `★ ${data.imdbRating}`;
 
-            renderGrid(seasonData, totalSeasons);
-            status.innerText = "";
-            container.style.display = 'block';
+        const totalSeasons = Number(data.totalSeasons);
+        const seasons = [];
 
-        } catch (e) {
-            status.innerText = "Error: Check connection or API key.";
+        for (let i = 1; i <= totalSeasons; i++) {
+            status.innerText = `Loading Season ${i}...`;
+            const sRes = await fetch(`${API}?apikey=${KEY}&i=${data.imdbID}&Season=${i}`);
+            seasons.push(await sRes.json());
+        }
+
+        renderGrid(seasons);
+        status.innerText = "";
+        container.style.display = 'block';
+
+    } catch (err) {
+        status.innerText = "Network / API error.";
+        console.error(err);
+    }
+}
+
+function getColor(r) {
+    const v = parseFloat(r);
+    if (isNaN(v)) return 'c-empty';
+    if (v >= 9) return 'c-9';
+    if (v >= 8.5) return 'c-85';
+    if (v >= 8) return 'c-8';
+    if (v >= 7) return 'c-7';
+    if (v >= 6) return 'c-6';
+    return 'c-low';
+}
+
+function renderGrid(seasons) {
+    const grid = document.getElementById('grid');
+    const totalS = seasons.length;
+    const maxEp = Math.max(...seasons.map(s => s.Episodes?.length || 0));
+
+    grid.style.gridTemplateColumns = `60px repeat(${totalS}, 55px)`;
+
+    let html = `<div></div>`;
+    for (let s = 1; s <= totalS; s++) {
+        html += `<div class="label season-hdr">S${s}</div>`;
+    }
+
+    for (let e = 0; e < maxEp; e++) {
+        html += `<div class="label">E${e + 1}</div>`;
+        for (let s = 0; s < totalS; s++) {
+            const ep = seasons[s].Episodes?.[e];
+            const r = ep?.imdbRating;
+            html += `<div class="cell ${getColor(r)}">${!isNaN(parseFloat(r)) ? r : '-'}</div>`;
         }
     }
 
-    function getColor(r) {
-        if (!r || r === "N/A") return 'c-empty';
-        const v = parseFloat(r);
-        if (v >= 9.0) return 'c-9';
-        if (v >= 8.5) return 'c-85';
-        if (v >= 8.0) return 'c-8';
-        if (v >= 7.0) return 'c-7';
-        if (v >= 6.0) return 'c-6';
-        return 'c-low';
+    html += `<div class="label avg-row">AVG</div>`;
+    for (let s = 0; s < totalS; s++) {
+        const ratings = seasons[s].Episodes
+            ?.map(e => parseFloat(e.imdbRating))
+            .filter(v => !isNaN(v)) || [];
+
+        const avg = ratings.length
+            ? (ratings.reduce((a, b) => a + b) / ratings.length).toFixed(1)
+            : '-';
+
+        html += `<div class="label avg-row">${avg}</div>`;
     }
 
-    function renderGrid(seasons, totalS) {
-        const grid = document.getElementById('grid');
-        let maxEp = Math.max(...seasons.map(s => s.Episodes ? s.Episodes.length : 0));
-        
-        grid.style.gridTemplateColumns = `40px repeat(${totalS}, 50px)`;
-        
-        // Header Row
-        let html = `<div class="label"></div>`;
-        for(let i=1; i<=totalS; i++) html += `<div class="label season-hdr">S${i}</div>`;
-
-        // Episode Rows
-        for(let e=0; e < maxEp; e++) {
-            html += `<div class="label" style="justify-content:flex-end; padding-right:8px">E${e+1}</div>`;
-            for(let s=0; s < totalS; s++) {
-                const ep = seasons[s].Episodes ? seasons[s].Episodes[e] : null;
-                const rating = ep ? ep.imdbRating : null;
-                html += `<div class="cell ${getColor(rating)}">${rating && rating !== "N/A" ? rating : '-'}</div>`;
-            }
-        }
-
-        // Avg Row (Bottom)
-        html += `<div class="label avg-row">AVG.</div>`;
-        for(let s=0; s < totalS; s++) {
-            const ratings = seasons[s].Episodes ? seasons[s].Episodes.map(ep => parseFloat(ep.imdbRating)).filter(r => !isNaN(r)) : [];
-            const avg = ratings.length ? (ratings.reduce((a,b) => a+b) / ratings.length).toFixed(1) : '-';
-            html += `<div class="label avg-row" style="color:white; font-weight:bold">${avg}</div>`;
-        }
-
-        grid.innerHTML = html;
-    }
+    grid.innerHTML = html;
+}
 </script>
-</body>
-</html>
+
