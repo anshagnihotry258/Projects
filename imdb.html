@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Series Rating Heatmap</title>
+    <style>
+        :root {
+            --bg-color: #0b0b0b;
+            --card-bg: #1a1a1a;
+            --text-main: #ffffff;
+            --text-dim: #888888;
+            --awesome: #3d85c6; /* 9.0+ */
+            --great: #38761d;   /* 8.5+ */
+            --good: #6aa84f;    /* 8.0+ */
+            --average: #f1c232; /* 7.0+ */
+            --bad: #e69138;     /* <7.0 */
+            --accent: #007bff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Search Bar */
+        .search-container {
+            margin: 20px 0 40px;
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        input {
+            flex-grow: 1;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 1px solid #333;
+            background: #222;
+            color: white;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 25px;
+            border-radius: 25px;
+            border: none;
+            background: var(--accent);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover { background: #0056b3; }
+
+        /* Main Layout */
+        .container { 
+            max-width: 1200px; 
+            width: 100%; 
+            display: none; /* Hidden until search */
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .header-top { display: flex; justify-content: flex-end; gap: 15px; margin-bottom: 20px; font-size: 11px; opacity: 0.8; }
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+
+        .main-layout { display: flex; gap: 40px; flex-wrap: wrap; }
+        .sidebar { width: 200px; flex-shrink: 0; text-align: center; }
+        .poster { width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .series-title { font-size: 24px; margin: 15px 0 5px; }
+        .series-meta { color: var(--text-dim); font-size: 14px; margin-bottom: 10px; }
+        .total-rating { font-size: 20px; color: var(--average); font-weight: bold; }
+
+        /* Grid */
+        .grid-container { overflow-x: auto; flex-grow: 1; }
+        .grid { display: grid; gap: 4px; margin-bottom: 50px; }
+
+        .cell {
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 2px;
+            color: #000;
+        }
+
+        .label { color: var(--text-dim); font-size: 11px; display: flex; align-items: center; justify-content: center; }
+        .season-label { color: var(--text-main); font-weight: bold; height: 30px; }
+
+        /* Color States */
+        .c-awesome { background: var(--awesome); color: #fff; }
+        .c-great { background: var(--great); color: #fff; }
+        .c-good { background: var(--good); }
+        .c-average { background: var(--average); }
+        .c-bad { background: var(--bad); }
+        .c-empty { background: transparent; border: 1px solid #222; color: #444; }
+
+        #status { color: var(--text-dim); margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Enter series name (e.g. Suits, Succession...)" onkeypress="if(event.key === 'Enter') startSearch()">
+        <button onclick="startSearch()">Search</button>
+    </div>
+
+    <div id="status"></div>
+
+    <div class="container" id="mainContainer">
+        <div class="header-top">
+            <div class="legend-item"><span class="dot" style="background:var(--awesome)"></span> 9.0+</div>
+            <div class="legend-item"><span class="dot" style="background:var(--great)"></span> 8.5+</div>
+            <div class="legend-item"><span class="dot" style="background:var(--good)"></span> 8.0+</div>
+            <div class="legend-item"><span class="dot" style="background:var(--average)"></span> 7.0+</div>
+        </div>
+
+        <div class="main-layout">
+            <div class="sidebar">
+                <img src="" id="showPoster" class="poster">
+                <div class="series-title" id="showTitle"></div>
+                <div class="series-meta" id="showYear"></div>
+                <div class="total-rating" id="showRating"></div>
+            </div>
+
+            <div class="grid-container">
+                <div id="ratingGrid" class="grid"></div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    const API_KEY = '580602b5';
+
+    async function startSearch() {
+        const query = document.getElementById('searchInput').value;
+        const status = document.getElementById('status');
+        const container = document.getElementById('mainContainer');
+        
+        if (!query) return;
+
+        status.innerText = "Searching...";
+        container.style.display = 'none';
+
+        try {
+            // 1. Find the Series
+            const searchRes = await fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=${encodeURIComponent(query)}&type=series`);
+            const searchData = await searchRes.json();
+
+            if (searchData.Response === "False") {
+                status.innerText = "Series not found. Try another name.";
+                return;
+            }
+
+            const imdbID = searchData.Search[0].imdbID;
+
+            // 2. Get Series Full Details
+            const fullRes = await fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&i=${imdbID}`);
+            const fullData = await fullRes.json();
+
+            // Update UI Sidebar
+            document.getElementById('showTitle').innerText = fullData.Title;
+            document.getElementById('showYear').innerText = fullData.Year;
+            document.getElementById('showPoster').src = fullData.Poster !== "N/A" ? fullData.Poster : 'https://via.placeholder.com/200x300?text=No+Poster';
+            document.getElementById('showRating').innerText = `★ ${fullData.imdbRating}`;
+
+            const totalSeasons = parseInt(fullData.totalSeasons);
+            
+            // 3. Fetch all seasons in parallel
+            status.innerText = `Fetching ${totalSeasons} seasons...`;
+            const seasonPromises = [];
+            for (let i = 1; i <= totalSeasons; i++) {
+                seasonPromises.push(fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&i=${imdbID}&Season=${i}`).then(r => r.json()));
+            }
+
+            const seasonsResults = await Promise.all(seasonPromises);
+            
+            // Build Matrix [Episode][Season]
+            let maxEpisodes = 0;
+            seasonsResults.forEach(s => {
+                if (s.Episodes && s.Episodes.length > maxEpisodes) maxEpisodes = s.Episodes.length;
+            });
+
+            const matrix = Array.from({ length: maxEpisodes }, () => Array(totalSeasons).fill(null));
+
+            seasonsResults.forEach((sData, sIdx) => {
+                if (sData.Episodes) {
+                    sData.Episodes.forEach((ep, eIdx) => {
+                        matrix[eIdx][sIdx] = ep.imdbRating !== "N/A" ? ep.imdbRating : null;
+                    });
+                }
+            });
+
+            renderHeatmap(matrix, totalSeasons);
+            
+            status.innerText = "";
+            container.style.display = 'block';
+
+        } catch (err) {
+            status.innerText = "Error fetching data.";
+            console.error(err);
+        }
+    }
+
+    function getColorClass(rating) {
+        if (!rating) return 'c-empty';
+        const val = parseFloat(rating);
+        if (val >= 9.0) return 'c-awesome';
+        if (val >= 8.5) return 'c-great';
+        if (val >= 8.0) return 'c-good';
+        if (val >= 7.0) return 'c-average';
+        return 'c-bad';
+    }
+
+    function renderHeatmap(matrix, seasons) {
+        const grid = document.getElementById('ratingGrid');
+        grid.style.gridTemplateColumns = `40px repeat(${seasons}, 48px)`;
+        
+        let html = '<div class="label"></div>';
+        for (let s = 1; s <= seasons; s++) {
+            html += `<div class="label season-label">S${s}</div>`;
+        }
+
+        matrix.forEach((row, eIdx) => {
+            html += `<div class="label ep-label">E${eIdx + 1}</div>`;
+            row.forEach(rating => {
+                const colorClass = getColorClass(rating);
+                html += `<div class="cell ${colorClass}">${rating || '-'}</div>`;
+            });
+        });
+
+        grid.innerHTML = html;
+    }
+</script>
+
+</body>
+</html>
