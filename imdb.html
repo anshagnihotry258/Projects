@@ -8,124 +8,224 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --bg:#121212;
-  --panel:#1c1c1c;
-  --text:#fff;
-  --dim:#aaa;
-
-  --awesome:#1fa971;
-  --great:#2ecc71;
-  --good:#27ae60;
-  --avg:#f1c40f;
-  --bad:#e67e22;
-  --garbage:#e74c3c;
+:root {
+  --bg: #121212;
+  --panel: #1c1c1c;
+  --text: #fff;
+  --dim: #aaa;
+  --awesome: #1fa971;
+  --great: #2ecc71;
+  --good: #27ae60;
+  --avg: #f1c40f;
+  --bad: #e67e22;
+  --garbage: #e74c3c;
 }
 
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:'Poppins',sans-serif;
-  background:var(--bg);
-  color:var(--text);
+* {
+  box-sizing: border-box;
 }
 
-.container{
-  max-width:1200px;
-  margin:auto;
-  padding:20px;
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg);
+  color: var(--text);
 }
 
-.topper{
-  text-align:center;
-  margin-bottom:30px;
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
 }
 
-.search-bar{
-  display:flex;
-  justify-content:center;
-  gap:10px;
+.topper {
+  text-align: center;
+  margin-bottom: 30px;
 }
 
-input{
-  padding:10px 14px;
-  width:280px;
-  border-radius:6px;
-  border:none;
-  outline:none;
+.search-bar {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-button{
-  padding:10px 20px;
-  border:none;
-  border-radius:6px;
-  background:#ff9800;
-  color:#000;
-  font-weight:600;
-  cursor:pointer;
+input {
+  padding: 10px 14px;
+  width: 280px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  background: #2a2a2a;
+  color: var(--text);
 }
 
-.layout{
-  display:flex;
-  gap:30px;
-  flex-wrap:wrap;
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #ff9800;
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
 }
 
-.sidebar{
-  width:260px;
+button:hover {
+  opacity: 0.9;
 }
 
-.poster{
-  width:100%;
-  border-radius:10px;
-  margin-bottom:15px;
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-.grid-wrapper{
-  flex:1;
-  overflow-x:auto;
+.layout {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
 }
 
-.grid{
-  display:grid;
-  gap:8px;
+.sidebar {
+  width: 260px;
+  background: var(--panel);
+  padding: 20px;
+  border-radius: 10px;
 }
 
-.label{
-  font-size:12px;
-  color:var(--dim);
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.poster {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  min-height: 300px;
+  background: #2a2a2a;
 }
 
-.cell{
-  height:42px;
-  border-radius:6px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:600;
+.grid-wrapper {
+  flex: 1;
+  min-width: 300px;
+  overflow-x: auto;
+  background: var(--panel);
+  padding: 20px;
+  border-radius: 10px;
 }
 
-.c-empty{background:#2a2a2a;color:#555}
-.c-9{background:var(--awesome)}
-.c-85{background:var(--great)}
-.c-8{background:var(--good)}
-.c-7{background:var(--avg);color:#000}
-.c-6{background:var(--bad)}
-.c-low{background:var(--garbage)}
-
-.legend{
-  display:flex;
-  gap:12px;
-  font-size:12px;
-  margin-bottom:10px;
+.grid {
+  display: grid;
+  gap: 8px;
 }
 
-.dot{
-  width:10px;height:10px;border-radius:50%;
+.label {
+  font-size: 12px;
+  color: var(--dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+}
+
+.cell {
+  height: 42px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  transition: transform 0.2s;
+}
+
+.cell:hover {
+  transform: scale(1.05);
+}
+
+.c-empty {
+  background: #2a2a2a;
+  color: #555;
+}
+
+.c-9 {
+  background: var(--awesome);
+}
+
+.c-85 {
+  background: var(--great);
+}
+
+.c-8 {
+  background: var(--good);
+}
+
+.c-7 {
+  background: var(--avg);
+  color: #000;
+}
+
+.c-6 {
+  background: var(--bad);
+}
+
+.c-low {
+  background: var(--garbage);
+}
+
+.legend {
+  display: flex;
+  gap: 15px;
+  font-size: 12px;
+  margin-bottom: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 10px;
+  background: var(--panel);
+  border-radius: 8px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.error {
+  color: #e74c3c;
+  text-align: center;
+  padding: 10px;
+  background: rgba(231, 76, 60, 0.1);
+  border-radius: 6px;
+  margin: 10px 0;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: var(--dim);
+}
+
+#query:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+  }
+  
+  .search-bar {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  input {
+    width: 100%;
+    max-width: 300px;
+  }
 }
 </style>
 </head>
@@ -136,22 +236,23 @@ button{
   <div class="topper">
     <h1>Series Episode Rating Heatmap</h1>
     <div class="search-bar">
-      <input id="query" placeholder="Enter series name (e.g. Dark)">
-      <button onclick="searchShow()">Search</button>
+      <input id="query" placeholder="Enter series name (e.g. Breaking Bad)">
+      <button id="searchBtn" onclick="searchShow()">Search</button>
     </div>
   </div>
 
   <div class="legend">
-    <div><span class="dot" style="background:#1fa971"></span> Awesome</div>
-    <div><span class="dot" style="background:#2ecc71"></span> Great</div>
-    <div><span class="dot" style="background:#27ae60"></span> Good</div>
-    <div><span class="dot" style="background:#f1c40f"></span> Average</div>
-    <div><span class="dot" style="background:#e74c3c"></span> Bad</div>
+    <div><span class="dot" style="background:#1fa971"></span> Awesome (9+)</div>
+    <div><span class="dot" style="background:#2ecc71"></span> Great (8.5+)</div>
+    <div><span class="dot" style="background:#27ae60"></span> Good (8+)</div>
+    <div><span class="dot" style="background:#f1c40f"></span> Average (7+)</div>
+    <div><span class="dot" style="background:#e67e22"></span> Bad (6+)</div>
+    <div><span class="dot" style="background:#e74c3c"></span> Poor (&lt;6)</div>
   </div>
 
   <div id="main" class="layout" style="display:none">
     <div class="sidebar">
-      <img id="poster" class="poster">
+      <img id="poster" class="poster" alt="Series Poster">
       <h2 id="title"></h2>
       <p id="meta" style="color:var(--dim)"></p>
       <p id="rating"></p>
@@ -162,65 +263,229 @@ button{
     </div>
   </div>
 
+  <div id="error" class="error" style="display:none"></div>
+  <div id="loading" class="loading" style="display:none">Loading series data...</div>
+
 </div>
 
 <script>
-const API_KEY = "a8421a7e";
-const API = "https://api.allorigins.win/raw?url=https://www.omdbapi.com/";
+// Use a CORS proxy or try direct API call
+// We'll try multiple approaches
+const API_KEY = "a8421a7e"; // Your API key
 
-const apiFetch = q =>
-  fetch(API + encodeURIComponent(q)).then(r=>r.json());
+// Different CORS proxy options
+const PROXY_OPTIONS = [
+  'https://api.allorigins.win/raw?url=',
+  'https://corsproxy.io/?',
+  'https://cors-anywhere.herokuapp.com/'
+];
 
-function getColor(r){
-  const v=parseFloat(r);
-  if(isNaN(v))return"c-empty";
-  if(v>=9)return"c-9";
-  if(v>=8.5)return"c-85";
-  if(v>=8)return"c-8";
-  if(v>=7)return"c-7";
-  if(v>=6)return"c-6";
-  return"c-low";
-}
-
-async function searchShow(){
-  const q=document.getElementById("query").value.trim();
-  if(!q)return;
-
-  const show=await apiFetch(`?apikey=${API_KEY}&t=${q}&type=series`);
-  if(show.Response==="False"){alert("Not found");return;}
-
-  poster.src=show.Poster;
-  title.innerText=show.Title;
-  meta.innerText=`${show.Year} • ${show.totalSeasons} Seasons`;
-  rating.innerText=`IMDb ★ ${show.imdbRating}`;
-
-  const seasons=[];
-  for(let i=1;i<=show.totalSeasons;i++){
-    seasons.push(await apiFetch(`?apikey=${API_KEY}&i=${show.imdbID}&Season=${i}`));
+async function makeRequest(url) {
+  let lastError = null;
+  
+  // Try direct first (sometimes it works)
+  try {
+    const response = await fetch(url);
+    if (response.ok) {
+      return await response.json();
+    }
+  } catch (error) {
+    lastError = error;
   }
-
-  renderGrid(seasons);
-  main.style.display="flex";
+  
+  // Try with CORS proxies if direct fails
+  for (const proxy of PROXY_OPTIONS) {
+    try {
+      const proxyUrl = proxy + encodeURIComponent(url);
+      const response = await fetch(proxyUrl, {
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (error) {
+      lastError = error;
+      console.log(`Proxy ${proxy} failed, trying next...`);
+    }
+  }
+  
+  throw lastError || new Error('All API attempts failed');
 }
 
-function renderGrid(seasons){
-  const grid=document.getElementById("grid");
-  const maxEp=Math.max(...seasons.map(s=>s.Episodes.length));
+function getColor(r) {
+  const v = parseFloat(r);
+  if (isNaN(v)) return "c-empty";
+  if (v >= 9) return "c-9";
+  if (v >= 8.5) return "c-85";
+  if (v >= 8) return "c-8";
+  if (v >= 7) return "c-7";
+  if (v >= 6) return "c-6";
+  return "c-low";
+}
 
-  grid.style.gridTemplateColumns=`60px repeat(${seasons.length}, 70px)`;
+async function searchShow() {
+  const queryInput = document.getElementById("query");
+  const searchBtn = document.getElementById("searchBtn");
+  const errorDiv = document.getElementById("error");
+  const loadingDiv = document.getElementById("loading");
+  const mainDiv = document.getElementById("main");
+  
+  const q = queryInput.value.trim();
+  if (!q) {
+    showError("Please enter a series name");
+    return;
+  }
+  
+  // Reset previous state
+  errorDiv.style.display = "none";
+  mainDiv.style.display = "none";
+  loadingDiv.style.display = "block";
+  
+  // Show loading state
+  queryInput.disabled = true;
+  searchBtn.textContent = "Searching...";
+  searchBtn.disabled = true;
 
-  let html=`<div></div>`;
-  seasons.forEach((_,i)=>html+=`<div class="label">S${i+1}</div>`);
+  try {
+    // Get series info
+    const seriesUrl = `https://www.omdbapi.com/?apikey=${API_KEY}&t=${encodeURIComponent(q)}&type=series`;
+    const showData = await makeRequest(seriesUrl);
+    
+    if (showData.Response === "False") {
+      showError(`Series not found: "${q}". Please check the name and try again.`);
+      return;
+    }
 
-  for(let e=0;e<maxEp;e++){
-    html+=`<div class="label">E${e+1}</div>`;
-    seasons.forEach(s=>{
-      const r=s.Episodes[e]?.imdbRating;
-      html+=`<div class="cell ${getColor(r)}">${r||"-"}</div>`;
+    // Check if totalSeasons exists
+    if (!showData.totalSeasons || showData.totalSeasons === "N/A") {
+      showError("This series doesn't have season information available.");
+      return;
+    }
+
+    // Get DOM elements
+    const poster = document.getElementById("poster");
+    const title = document.getElementById("title");
+    const meta = document.getElementById("meta");
+    const rating = document.getElementById("rating");
+
+    // Update sidebar
+    poster.src = showData.Poster !== "N/A" ? showData.Poster : "https://via.placeholder.com/300x450/333/fff?text=No+Poster";
+    poster.onerror = function() {
+      this.src = "https://via.placeholder.com/300x450/333/fff?text=Poster+Error";
+    };
+    
+    title.textContent = showData.Title;
+    meta.textContent = `${showData.Year} • ${showData.totalSeasons} Seasons • ${showData.Genre || "N/A"}`;
+    rating.textContent = `IMDb ★ ${showData.imdbRating || "N/A"}`;
+
+    // Get seasons data
+    const seasons = [];
+    const totalSeasons = parseInt(showData.totalSeasons);
+    
+    loadingDiv.textContent = `Loading ${totalSeasons} seasons...`;
+    
+    for (let i = 1; i <= totalSeasons; i++) {
+      try {
+        const seasonUrl = `https://www.omdbapi.com/?apikey=${API_KEY}&i=${showData.imdbID}&Season=${i}`;
+        const seasonData = await makeRequest(seasonUrl);
+        
+        if (seasonData.Response === "True") {
+          seasons.push(seasonData);
+        } else {
+          seasons.push({ Episodes: [] }); // Empty season if failed
+        }
+        
+        // Update loading text
+        loadingDiv.textContent = `Loading season ${i} of ${totalSeasons}...`;
+        
+        // Small delay to avoid rate limiting
+        await new Promise(resolve => setTimeout(resolve, 200));
+      } catch (seasonError) {
+        console.error(`Error loading season ${i}:`, seasonError);
+        seasons.push({ Episodes: [] }); // Add empty season
+      }
+    }
+
+    // Hide loading and render
+    loadingDiv.style.display = "none";
+    renderGrid(seasons);
+    mainDiv.style.display = "flex";
+    
+  } catch (error) {
+    console.error("Error:", error);
+    showError(`API Error: ${error.message}. Please try again later.`);
+  } finally {
+    // Reset button state
+    queryInput.disabled = false;
+    searchBtn.textContent = "Search";
+    searchBtn.disabled = false;
+    loadingDiv.style.display = "none";
+  }
+}
+
+function showError(message) {
+  const errorDiv = document.getElementById("error");
+  errorDiv.textContent = message;
+  errorDiv.style.display = "block";
+  document.getElementById("loading").style.display = "none";
+}
+
+function renderGrid(seasons) {
+  const grid = document.getElementById("grid");
+  
+  // Clear previous grid
+  grid.innerHTML = "";
+  
+  // Find max episodes in any season
+  const maxEp = Math.max(...seasons.map(s => (s.Episodes || []).length));
+  
+  if (maxEp === 0) {
+    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 20px; color: var(--dim)">No episode data available</div>';
+    return;
+  }
+  
+  // Set grid columns: one for episode labels + one for each season
+  grid.style.gridTemplateColumns = `60px repeat(${seasons.length}, 70px)`;
+  
+  let html = '<div></div>'; // Empty top-left corner
+  
+  // Add season headers
+  seasons.forEach((_, i) => {
+    html += `<div class="label">S${i + 1}</div>`;
+  });
+  
+  // Add episode rows
+  for (let e = 0; e < maxEp; e++) {
+    // Episode label
+    html += `<div class="label">E${e + 1}</div>`;
+    
+    // Episode ratings for each season
+    seasons.forEach(season => {
+      const episode = (season.Episodes || [])[e];
+      const rating = episode ? episode.imdbRating : null;
+      const episodeTitle = episode ? episode.Title : "";
+      const titleAttr = episode ? `title="S${seasons.indexOf(season)+1}E${e+1}: ${episodeTitle}"` : "";
+      html += `<div class="cell ${getColor(rating)}" ${titleAttr}>${rating || "-"}</div>`;
     });
   }
-  grid.innerHTML=html;
+  
+  grid.innerHTML = html;
 }
+
+// Allow pressing Enter to search
+document.getElementById("query").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") {
+    searchShow();
+  }
+});
+
+// Pre-populate with example
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('query').value = 'Breaking Bad';
+});
 </script>
 
 </body>
