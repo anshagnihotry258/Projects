@@ -6,245 +6,203 @@
     <title>Series Rating Heatmap</title>
     <style>
         :root {
-            --bg-color: #0b0b0b;
-            --card-bg: #1a1a1a;
+            --bg-color: #0d0d0d;
             --text-main: #ffffff;
             --text-dim: #888888;
             --awesome: #3d85c6; /* 9.0+ */
             --great: #38761d;   /* 8.5+ */
             --good: #6aa84f;    /* 8.0+ */
             --average: #f1c232; /* 7.0+ */
-            --bad: #e69138;     /* <7.0 */
+            --bad: #e69138;     /* 6.0+ */
+            --garbage: #cc0000; /* < 6.0 */
             --accent: #007bff;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
         }
 
-        /* Search Bar */
-        .search-container {
+        /* Search Section */
+        .search-box {
             margin: 20px 0 40px;
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            max-width: 600px;
+            display: flex; gap: 10px;
+            width: 100%; max-width: 500px;
         }
-
         input {
-            flex-grow: 1;
-            padding: 12px 20px;
-            border-radius: 25px;
-            border: 1px solid #333;
-            background: #222;
-            color: white;
-            font-size: 16px;
+            flex: 1; padding: 12px 20px; border-radius: 25px;
+            border: 1px solid #333; background: #1a1a1a; color: white;
         }
-
         button {
-            padding: 10px 25px;
-            border-radius: 25px;
-            border: none;
-            background: var(--accent);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
+            padding: 10px 25px; border-radius: 25px; border: none;
+            background: var(--accent); color: white; font-weight: bold; cursor: pointer;
         }
 
-        button:hover { background: #0056b3; }
-
-        /* Main Layout */
-        .container { 
-            max-width: 1200px; 
-            width: 100%; 
-            display: none; /* Hidden until search */
-            animation: fadeIn 0.5s ease-in;
+        /* Legend */
+        .legend {
+            display: flex; gap: 15px; margin-bottom: 25px; 
+            font-size: 11px; text-transform: uppercase;
         }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .header-top { display: flex; justify-content: flex-end; gap: 15px; margin-bottom: 20px; font-size: 11px; opacity: 0.8; }
         .legend-item { display: flex; align-items: center; gap: 5px; }
         .dot { width: 10px; height: 10px; border-radius: 50%; }
 
-        .main-layout { display: flex; gap: 40px; flex-wrap: wrap; }
-        .sidebar { width: 200px; flex-shrink: 0; text-align: center; }
-        .poster { width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .series-title { font-size: 24px; margin: 15px 0 5px; }
-        .series-meta { color: var(--text-dim); font-size: 14px; margin-bottom: 10px; }
-        .total-rating { font-size: 20px; color: var(--average); font-weight: bold; }
-
+        /* Main Container */
+        #mainContainer { display: none; width: 100%; max-width: 1100px; }
+        .layout { display: flex; gap: 40px; flex-wrap: wrap; }
+        .sidebar { width: 180px; flex-shrink: 0; text-align: center; }
+        .poster { width: 100%; border-radius: 6px; margin-bottom: 15px; }
+        
         /* Grid */
-        .grid-container { overflow-x: auto; flex-grow: 1; }
-        .grid { display: grid; gap: 4px; margin-bottom: 50px; }
-
+        .grid-wrapper { flex: 1; overflow-x: auto; }
+        .grid { display: grid; gap: 4px; }
         .cell {
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-            border-radius: 2px;
-            color: #000;
+            height: 35px; display: flex; align-items: center; 
+            justify-content: center; font-size: 12px; font-weight: bold;
+            border-radius: 2px; color: #000;
         }
-
         .label { color: var(--text-dim); font-size: 11px; display: flex; align-items: center; justify-content: center; }
-        .season-label { color: var(--text-main); font-weight: bold; height: 30px; }
+        .season-hdr { color: var(--text-main); font-weight: bold; height: 30px; }
+        .avg-row { border-top: 1px solid #333; margin-top: 10px; padding-top: 10px; color: var(--text-main); }
 
-        /* Color States */
-        .c-awesome { background: var(--awesome); color: #fff; }
-        .c-great { background: var(--great); color: #fff; }
-        .c-good { background: var(--good); }
-        .c-average { background: var(--average); }
-        .c-bad { background: var(--bad); }
+        /* Rating Colors */
+        .c-9 { background: var(--awesome); color: #fff; }
+        .c-85 { background: var(--great); color: #fff; }
+        .c-8 { background: var(--good); }
+        .c-7 { background: var(--average); }
+        .c-6 { background: var(--bad); }
+        .c-low { background: var(--garbage); color: #fff; }
         .c-empty { background: transparent; border: 1px solid #222; color: #444; }
-
-        #status { color: var(--text-dim); margin-top: 20px; }
     </style>
 </head>
 <body>
 
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Enter series name (e.g. Suits, Succession...)" onkeypress="if(event.key === 'Enter') startSearch()">
-        <button onclick="startSearch()">Search</button>
+    <div class="search-box">
+        <input type="text" id="query" placeholder="Enter Series Name (e.g. Suits)">
+        <button onclick="searchShow()">Search</button>
     </div>
 
     <div id="status"></div>
 
-    <div class="container" id="mainContainer">
-        <div class="header-top">
-            <div class="legend-item"><span class="dot" style="background:var(--awesome)"></span> 9.0+</div>
-            <div class="legend-item"><span class="dot" style="background:var(--great)"></span> 8.5+</div>
-            <div class="legend-item"><span class="dot" style="background:var(--good)"></span> 8.0+</div>
-            <div class="legend-item"><span class="dot" style="background:var(--average)"></span> 7.0+</div>
+    <div id="mainContainer">
+        <div class="legend">
+            <div class="legend-item"><span class="dot" style="background:var(--awesome)"></span> Awesome</div>
+            <div class="legend-item"><span class="dot" style="background:var(--great)"></span> Great</div>
+            <div class="legend-item"><span class="dot" style="background:var(--good)"></span> Good</div>
+            <div class="legend-item"><span class="dot" style="background:var(--average)"></span> Average</div>
         </div>
 
-        <div class="main-layout">
+        <div class="layout">
             <div class="sidebar">
-                <img src="" id="showPoster" class="poster">
-                <div class="series-title" id="showTitle"></div>
-                <div class="series-meta" id="showYear"></div>
-                <div class="total-rating" id="showRating"></div>
+                <img id="poster" class="poster">
+                <h2 id="title" style="margin:0"></h2>
+                <p id="meta" style="color:var(--text-dim); font-size:14px"></p>
+                <div id="rating" style="font-size:18px; color:var(--average)"></div>
             </div>
-
-            <div class="grid-container">
-                <div id="ratingGrid" class="grid"></div>
+            <div class="grid-wrapper">
+                <div id="grid" class="grid"></div>
             </div>
         </div>
     </div>
 
 <script>
-    const API_KEY = '580602b5';
+    const KEY = '580602b5';
 
-    async function startSearch() {
-        const query = document.getElementById('searchInput').value;
+    async function searchShow() {
+        const val = document.getElementById('query').value;
         const status = document.getElementById('status');
         const container = document.getElementById('mainContainer');
         
-        if (!query) return;
-
-        status.innerText = "Searching...";
+        if(!val) return;
+        status.innerText = "Loading series data...";
         container.style.display = 'none';
 
         try {
-            // 1. Find the Series
-            const searchRes = await fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=${encodeURIComponent(query)}&type=series`);
-            const searchData = await searchRes.json();
+            // Try direct title lookup first (more reliable for specific names)
+            let res = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&t=${encodeURIComponent(val)}&type=series`);
+            let data = await res.json();
 
-            if (searchData.Response === "False") {
-                status.innerText = "Series not found. Try another name.";
-                return;
-            }
-
-            const imdbID = searchData.Search[0].imdbID;
-
-            // 2. Get Series Full Details
-            const fullRes = await fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&i=${imdbID}`);
-            const fullData = await fullRes.json();
-
-            // Update UI Sidebar
-            document.getElementById('showTitle').innerText = fullData.Title;
-            document.getElementById('showYear').innerText = fullData.Year;
-            document.getElementById('showPoster').src = fullData.Poster !== "N/A" ? fullData.Poster : 'https://via.placeholder.com/200x300?text=No+Poster';
-            document.getElementById('showRating').innerText = `★ ${fullData.imdbRating}`;
-
-            const totalSeasons = parseInt(fullData.totalSeasons);
-            
-            // 3. Fetch all seasons in parallel
-            status.innerText = `Fetching ${totalSeasons} seasons...`;
-            const seasonPromises = [];
-            for (let i = 1; i <= totalSeasons; i++) {
-                seasonPromises.push(fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&i=${imdbID}&Season=${i}`).then(r => r.json()));
-            }
-
-            const seasonsResults = await Promise.all(seasonPromises);
-            
-            // Build Matrix [Episode][Season]
-            let maxEpisodes = 0;
-            seasonsResults.forEach(s => {
-                if (s.Episodes && s.Episodes.length > maxEpisodes) maxEpisodes = s.Episodes.length;
-            });
-
-            const matrix = Array.from({ length: maxEpisodes }, () => Array(totalSeasons).fill(null));
-
-            seasonsResults.forEach((sData, sIdx) => {
-                if (sData.Episodes) {
-                    sData.Episodes.forEach((ep, eIdx) => {
-                        matrix[eIdx][sIdx] = ep.imdbRating !== "N/A" ? ep.imdbRating : null;
-                    });
+            // If direct lookup fails, try search
+            if (data.Response === "False") {
+                const searchRes = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&s=${encodeURIComponent(val)}&type=series`);
+                const searchData = await searchRes.json();
+                if(searchData.Response === "True") {
+                    res = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&i=${searchData.Search[0].imdbID}`);
+                    data = await res.json();
+                } else {
+                    status.innerText = "Series not found. Try a more specific name.";
+                    return;
                 }
-            });
+            }
 
-            renderHeatmap(matrix, totalSeasons);
-            
+            // Fill Sidebar
+            document.getElementById('poster').src = data.Poster !== "N/A" ? data.Poster : '';
+            document.getElementById('title').innerText = data.Title;
+            document.getElementById('meta').innerText = `${data.Year} • ${data.totalSeasons} Seasons`;
+            document.getElementById('rating').innerText = `★ ${data.imdbRating} (${data.imdbVotes})`;
+
+            const totalSeasons = parseInt(data.totalSeasons);
+            const seasonData = [];
+
+            // Fetch Seasons
+            for (let i = 1; i <= totalSeasons; i++) {
+                status.innerText = `Loading Season ${i}...`;
+                const sRes = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&i=${data.imdbID}&Season=${i}`);
+                seasonData.push(await sRes.json());
+            }
+
+            renderGrid(seasonData, totalSeasons);
             status.innerText = "";
             container.style.display = 'block';
 
-        } catch (err) {
-            status.innerText = "Error fetching data.";
-            console.error(err);
+        } catch (e) {
+            status.innerText = "Error: Check connection or API key.";
         }
     }
 
-    function getColorClass(rating) {
-        if (!rating) return 'c-empty';
-        const val = parseFloat(rating);
-        if (val >= 9.0) return 'c-awesome';
-        if (val >= 8.5) return 'c-great';
-        if (val >= 8.0) return 'c-good';
-        if (val >= 7.0) return 'c-average';
-        return 'c-bad';
+    function getColor(r) {
+        if (!r || r === "N/A") return 'c-empty';
+        const v = parseFloat(r);
+        if (v >= 9.0) return 'c-9';
+        if (v >= 8.5) return 'c-85';
+        if (v >= 8.0) return 'c-8';
+        if (v >= 7.0) return 'c-7';
+        if (v >= 6.0) return 'c-6';
+        return 'c-low';
     }
 
-    function renderHeatmap(matrix, seasons) {
-        const grid = document.getElementById('ratingGrid');
-        grid.style.gridTemplateColumns = `40px repeat(${seasons}, 48px)`;
+    function renderGrid(seasons, totalS) {
+        const grid = document.getElementById('grid');
+        let maxEp = Math.max(...seasons.map(s => s.Episodes ? s.Episodes.length : 0));
         
-        let html = '<div class="label"></div>';
-        for (let s = 1; s <= seasons; s++) {
-            html += `<div class="label season-label">S${s}</div>`;
+        grid.style.gridTemplateColumns = `40px repeat(${totalS}, 50px)`;
+        
+        // Header Row
+        let html = `<div class="label"></div>`;
+        for(let i=1; i<=totalS; i++) html += `<div class="label season-hdr">S${i}</div>`;
+
+        // Episode Rows
+        for(let e=0; e < maxEp; e++) {
+            html += `<div class="label" style="justify-content:flex-end; padding-right:8px">E${e+1}</div>`;
+            for(let s=0; s < totalS; s++) {
+                const ep = seasons[s].Episodes ? seasons[s].Episodes[e] : null;
+                const rating = ep ? ep.imdbRating : null;
+                html += `<div class="cell ${getColor(rating)}">${rating && rating !== "N/A" ? rating : '-'}</div>`;
+            }
         }
 
-        matrix.forEach((row, eIdx) => {
-            html += `<div class="label ep-label">E${eIdx + 1}</div>`;
-            row.forEach(rating => {
-                const colorClass = getColorClass(rating);
-                html += `<div class="cell ${colorClass}">${rating || '-'}</div>`;
-            });
-        });
+        // Avg Row (Bottom)
+        html += `<div class="label avg-row">AVG.</div>`;
+        for(let s=0; s < totalS; s++) {
+            const ratings = seasons[s].Episodes ? seasons[s].Episodes.map(ep => parseFloat(ep.imdbRating)).filter(r => !isNaN(r)) : [];
+            const avg = ratings.length ? (ratings.reduce((a,b) => a+b) / ratings.length).toFixed(1) : '-';
+            html += `<div class="label avg-row" style="color:white; font-weight:bold">${avg}</div>`;
+        }
 
         grid.innerHTML = html;
     }
 </script>
-
 </body>
 </html>
