@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoPlates | From Parali to Planet</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    scroll-behavior: smooth;
+}
+
+/* NAVBAR */
+nav {
+    background: #1b5e20;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+}
+nav a {
+    color: white;
+    margin: 0 10px;
+    text-decoration: none;
+}
+
+/* HERO */
+.hero {
+    height: 100vh;
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+    url('https://images.unsplash.com/photo-1604335399105-a0c585fd81a9');
+    background-size: cover;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.hero h1 {
+    font-size: 3rem;
+}
+.btn {
+    background: #4caf50;
+    padding: 12px 20px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+/* SECTIONS */
+section {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.card {
+    display: inline-block;
+    width: 250px;
+    margin: 20px;
+    padding: 20px;
+    background: #f1f1f1;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+.card:hover {
+    transform: scale(1.05);
+}
+
+/* CONTACT */
+input, textarea {
+    width: 80%;
+    padding: 10px;
+    margin: 10px;
+}
+
+/* FOOTER */
+footer {
+    background: #1b5e20;
+    color: white;
+    padding: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <h2>EcoPlates</h2>
+    <div>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+    </div>
+</nav>
+
+<!-- LANDING PAGE -->
+<section id="home" class="hero">
+    <div>
+        <h1>From Waste to Worth</h1>
+        <p>Turning Parali into Eco-Friendly Plates</p>
+        <button class="btn" onclick="scrollToSection('about')">Learn More</button>
+    </div>
+</section>
+
+<!-- ABOUT PAGE -->
+<section id="about">
+    <h2>About Our Venture</h2>
+    <p>We convert agricultural waste like parali into biodegradable plates, reducing pollution and replacing plastic.</p>
+
+    <div>
+        <div class="card">
+            <h3>Eco-Friendly</h3>
+            <p>100% biodegradable and sustainable</p>
+        </div>
+
+        <div class="card">
+            <h3>Low Cost</h3>
+            <p>Affordable alternative to plastic</p>
+        </div>
+
+        <div class="card">
+            <h3>Impact</h3>
+            <p>Reduces air pollution and supports farmers</p>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT PAGE -->
+<section id="contact">
+    <h2>Contact Us</h2>
+    <p>Partner with us or place bulk orders</p>
+
+    <input type="text" placeholder="Your Name"><br>
+    <input type="email" placeholder="Your Email"><br>
+    <textarea placeholder="Your Message"></textarea><br>
+    <button class="btn" onclick="submitForm()">Send Message</button>
+</section>
+
+<footer>
+    <p>© 2026 EcoPlates | Sustainable Future</p>
+</footer>
+
+<script>
+function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView();
+}
+
+function submitForm() {
+    alert("Message sent! We'll contact you soon.");
+}
+</script>
+
+</body>
+</html>
