@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+
+Transaction History | IEEE Inventory Management
+
+</title>
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+/>
+
+<link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+
+<header class="header">
+
+<div class="header-left">
+
+    <div class="logo">
+
+        <i class="fa-solid fa-boxes-stacked"></i>
+
+    </div>
+
+    <div>
+
+        <h1>IEEE Inventory Management System</h1>
+
+        <p>Transaction History</p>
+
+    </div>
+
+</div>
+
+
+
+    </div>
+
+    <div class="header-right">
+
+        <div class="status">
+
+            <i class="fa-solid fa-circle"></i>
+
+System Online
+
+        </div>
+
+    </div>
+
+</header>
+<div class="page-actions">
+
+    <a href="index.html" class="back-btn">
+
+        <i class="fa-solid fa-arrow-left"></i>
+
+        Back to Dashboard
+
+    </a>
+
+</div>
+
+
+
+
+
+    <!-- ================= MAIN ================= -->
+
+<main class="container">
+
+<section class="page-header">
+
+    <h2>
+
+        <i class="fa-solid fa-clock-rotate-left"></i>
+
+        Transaction History
+
+    </h2>
+
+    <p>
+
+        View all inventory transactions.
+
+    </p>
+
+</section>
+
+    <section class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Date</th>
+
+                    <th>Item</th>
+
+                    <th>Borrowed By</th>
+
+                    <th>Quantity</th>
+
+                    <th>Type</th>
+
+                    <th>Purpose</th>
+
+                </tr>
+
+            </thead>
+
+<tbody id="historyTable">
+
+    <tr>
+
+        <td colspan="6" style="text-align:center; padding:30px;">
+
+            Loading transaction history...
+
+        </td>
+
+    </tr>
+
+</tbody>
+        </table>
+
+    </section>
+
+</main>
+
+
+
+
+<footer class="footer">
+
+    <p>
+
+        IEEE Student Branch Inventory Management System
+
+    </p>
+
+    <small>
+
+        Version 1.0 | HTML • CSS • JavaScript • Node.js • Express • MySQL
+
+    </small>
+
+</footer>
+
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script src="js/api.js"></script>
+
+    <script src="js/ui.js"></script>
+
+    <script src="js/toast.js"></script>
+
+<script src="js/history.js"></script>
+</body>
+
+</html>
