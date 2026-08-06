@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monty Hall Simulator</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Monty Hall Problem Simulator</h1>
+
+        <div class="inputs">
+
+            <div class="card">
+                <h3>Power of 10</h3>
+
+                <input
+                    type="number"
+                    id="powerInput"
+                    placeholder="Example: 6">
+
+                <button onclick="runPowerSimulation()">
+                    Run 10ⁿ Simulation
+                </button>
+            </div>
+
+            <div class="card">
+
+                <h3>Custom Simulations</h3>
+
+                <input
+                    type="number"
+                    id="customInput"
+                    placeholder="Example: 1000000">
+
+                <button onclick="runCustomSimulation()">
+                    Run Custom Simulation
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="results">
+
+            <h2>Results</h2>
+
+            <p>Total Simulations :
+                <span id="runs">0</span>
+            </p>
+
+            <p>Stay Wins :
+                <span id="stayWins">0</span>
+            </p>
+
+            <p>Switch Wins :
+                <span id="switchWins">0</span>
+            </p>
+
+            <p>Stay Percentage :
+                <span id="stayPercent">0%</span>
+            </p>
+
+            <p>Switch Percentage :
+                <span id="switchPercent">0%</span>
+            </p>
+
+            <p>Execution Time :
+                <span id="time">0</span>
+            </p>
+
+        </div>
+
+    </div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
