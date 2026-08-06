@@ -435,3 +435,36 @@ canvas{
     }
 
 }
+.door{
+
+    user-select:none;
+
+    perspective:1000px;
+
+}
+
+.open{
+
+    transform:rotateY(70deg);
+
+}
+
+.closed{
+
+    transform:rotateY(0deg);
+
+}
+
+#gameStatus{
+
+    margin-top:15px;
+
+    margin-bottom:20px;
+
+    font-size:18px;
+
+    color:#38bdf8;
+
+    min-height:28px;
+
+}

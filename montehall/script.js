@@ -1,43 +1,81 @@
+/* -------------------------------
+   GLOBAL VARIABLES
+--------------------------------*/
+
 let pieChart;
 let barChart;
 
+/* -------------------------------
+   INITIALIZE CHARTS
+--------------------------------*/
+
 window.onload = function () {
 
-    const pie = document.getElementById("pieChart");
+    initializeCharts();
 
-    pieChart = new Chart(pie, {
+};
+
+/* -------------------------------
+   CREATE CHARTS
+--------------------------------*/
+
+function initializeCharts() {
+
+    const pieCanvas = document.getElementById("pieChart");
+
+    pieChart = new Chart(pieCanvas, {
 
         type: "pie",
 
         data: {
 
-            labels: ["Stay", "Switch"],
+            labels: [
 
-            datasets: [{
+                "Stay",
 
-                data: [0, 0],
+                "Switch"
 
-                backgroundColor: [
+            ],
 
-                    "#ef4444",
+            datasets: [
 
-                    "#22c55e"
+                {
 
-                ]
+                    data: [0,0],
 
-            }]
+                    backgroundColor: [
+
+                        "#ef4444",
+
+                        "#22c55e"
+
+                    ],
+
+                    borderWidth:2
+
+                }
+
+            ]
 
         },
 
-        options: {
+        options:{
 
-            plugins: {
+            responsive:true,
 
-                legend: {
+            plugins:{
 
-                    labels: {
+                legend:{
 
-                        color: "white"
+                    labels:{
+
+                        color:"white",
+
+                        font:{
+
+                            size:16
+
+                        }
 
                     }
 
@@ -49,23 +87,29 @@ window.onload = function () {
 
     });
 
-    const bar = document.getElementById("barChart");
+    const barCanvas = document.getElementById("barChart");
 
-    barChart = new Chart(bar, {
+    barChart = new Chart(barCanvas,{
 
-        type: "bar",
+        type:"bar",
 
-        data: {
+        data:{
 
-            labels: ["Stay", "Switch"],
+            labels:[
 
-            datasets: [{
+                "Stay",
 
-                label: "Wins",
+                "Switch"
 
-                data: [0, 0],
+            ],
 
-                backgroundColor: [
+            datasets:[{
+
+                label:"Wins",
+
+                data:[0,0],
+
+                backgroundColor:[
 
                     "#ef4444",
 
@@ -77,27 +121,29 @@ window.onload = function () {
 
         },
 
-        options: {
+        options:{
 
-            scales: {
+            responsive:true,
 
-                y: {
+            scales:{
 
-                    beginAtZero: true,
+                x:{
 
-                    ticks: {
+                    ticks:{
 
-                        color: "white"
+                        color:"white"
 
                     }
 
                 },
 
-                x: {
+                y:{
 
-                    ticks: {
+                    beginAtZero:true,
 
-                        color: "white"
+                    ticks:{
+
+                        color:"white"
 
                     }
 
@@ -105,13 +151,13 @@ window.onload = function () {
 
             },
 
-            plugins: {
+            plugins:{
 
-                legend: {
+                legend:{
 
-                    labels: {
+                    labels:{
 
-                        color: "white"
+                        color:"white"
 
                     }
 
@@ -123,31 +169,47 @@ window.onload = function () {
 
     });
 
-};
+}
 
-function runPowerSimulation() {
+/* -------------------------------
+   BUTTON FUNCTIONS
+--------------------------------*/
 
-    const p = Number(document.getElementById("powerInput").value);
+function runPowerSimulation(){
 
-    if (isNaN(p) || p < 0) {
+    const power = Number(
 
-        alert("Enter a valid power.");
+        document.getElementById("powerInput").value
+
+    );
+
+    if(isNaN(power) || power<0){
+
+        alert("Please enter a valid power.");
 
         return;
 
     }
 
-    simulate(Math.pow(10, p));
+    simulate(
+
+        Math.pow(10,power)
+
+    );
 
 }
 
-function runCustomSimulation() {
+function runCustomSimulation(){
 
-    const runs = Number(document.getElementById("customInput").value);
+    const runs = Number(
 
-    if (isNaN(runs) || runs <= 0) {
+        document.getElementById("customInput").value
 
-        alert("Enter a valid number.");
+    );
+
+    if(isNaN(runs) || runs<=0){
+
+        alert("Please enter a valid number.");
 
         return;
 
@@ -157,21 +219,37 @@ function runCustomSimulation() {
 
 }
 
-function simulate(runs) {
+/* -------------------------------
+   MAIN SIMULATION
+--------------------------------*/
 
-    let stayWins = 0;
+function simulate(runs){
 
-    let switchWins = 0;
+    let stayWins=0;
 
-    const start = performance.now();
+    let switchWins=0;
 
-    for (let i = 0; i < runs; i++) {
+    const start=performance.now();
 
-        const car = Math.floor(Math.random() * 3);
+    for(let i=0;i<runs;i++){
 
-        const choice = Math.floor(Math.random() * 3);
+        const car=
 
-        if (car === choice)
+            Math.floor(
+
+                Math.random()*3
+
+            );
+
+        const choice=
+
+            Math.floor(
+
+                Math.random()*3
+
+            );
+
+        if(choice===car)
 
             stayWins++;
 
@@ -181,100 +259,221 @@ function simulate(runs) {
 
     }
 
-    const end = performance.now();
+    const end=performance.now();
 
-    const stayPercent = ((stayWins / runs) * 100).toFixed(4);
+    const seconds=
 
-    const switchPercent = ((switchWins / runs) * 100).toFixed(4);
+        (end-start)/1000;
 
-    document.getElementById("runs").textContent =
-        runs.toLocaleString();
+    const stayPercent=
 
-    document.getElementById("stayWins").textContent =
-        stayWins.toLocaleString();
+        (
 
-    document.getElementById("switchWins").textContent =
-        switchWins.toLocaleString();
+            stayWins*100/runs
 
-    document.getElementById("stayPercent").textContent =
-        stayPercent + "%";
+        ).toFixed(4);
 
-    document.getElementById("switchPercent").textContent =
-        switchPercent + "%";
+    const switchPercent=
 
-    document.getElementById("time").textContent =
-        ((end - start) / 1000).toFixed(6) + " sec";
+        (
 
-    pieChart.data.datasets[0].data = [
+            switchWins*100/runs
 
-        stayWins,
+        ).toFixed(4);
 
-        switchWins
+    const speed=
 
-    ];
+        Math.round(
 
-    pieChart.update();
+            runs/seconds
 
-    barChart.data.datasets[0].data = [
+        );
+
+    updateDashboard(
+
+        runs,
 
         stayWins,
 
-        switchWins
+        switchWins,
 
-    ];
+        stayPercent,
 
-    barChart.update();
+        switchPercent,
+
+        seconds,
+
+        speed
+
+    );
 
 }
 
-document.getElementById("playButton").addEventListener("click", playOneGame);
+/* -------------------------------
+   UPDATE DASHBOARD
+--------------------------------*/
 
-function playOneGame() {
+function updateDashboard(
 
-    const doors = [
+runs,
 
-        document.getElementById("door1"),
+stayWins,
 
-        document.getElementById("door2"),
+switchWins,
 
-        document.getElementById("door3")
+stayPercent,
 
-    ];
+switchPercent,
 
-    doors.forEach(d => {
+seconds,
 
-        d.innerHTML = "🚪";
+speed
 
-    });
+){
 
-    const car = Math.floor(Math.random() * 3);
+document.getElementById("runs").textContent=
 
-    const player = Math.floor(Math.random() * 3);
+runs.toLocaleString();
 
-    let goatDoor = -1;
+document.getElementById("stayWins").textContent=
 
-    for (let i = 0; i < 3; i++) {
+stayWins.toLocaleString();
 
-        if (i !== car && i !== player) {
+document.getElementById("switchWins").textContent=
 
-            goatDoor = i;
+switchWins.toLocaleString();
 
-            break;
+document.getElementById("stayPercent").textContent=
 
-        }
+stayPercent+"%";
 
-    }
+document.getElementById("switchPercent").textContent=
 
-    setTimeout(() => {
+switchPercent+"%";
 
-        doors[goatDoor].innerHTML = "🐐";
+document.getElementById("time").textContent=
 
-    }, 700);
+seconds.toFixed(6)+" sec";
 
-    setTimeout(() => {
+document.getElementById("speed").textContent=
 
-        doors[car].innerHTML = "🚗";
+speed.toLocaleString()+" / sec";
 
-    }, 1800);
+/* Update Pie Chart */
+
+pieChart.data.datasets[0].data=[
+
+stayWins,
+
+switchWins
+
+];
+
+pieChart.update();
+
+/* Update Bar Chart */
+
+barChart.data.datasets[0].data=[
+
+stayWins,
+
+switchWins
+
+];
+
+barChart.update();
+
+}
+document
+.getElementById("playButton")
+.addEventListener("click",playOneGame);
+
+function playOneGame(){
+
+const doors=[
+
+document.getElementById("door1"),
+
+document.getElementById("door2"),
+
+document.getElementById("door3")
+
+];
+
+doors.forEach(d=>{
+
+d.classList.remove("open");
+
+d.classList.add("closed");
+
+d.innerHTML="🚪";
+
+});
+
+const status=document.getElementById("gameStatus");
+
+const car=Math.floor(Math.random()*3);
+
+const player=Math.floor(Math.random()*3);
+
+let goatDoor;
+
+let remainingDoor;
+
+status.textContent=
+"Player chooses Door "+(player+1);
+
+for(let i=0;i<3;i++){
+
+if(i!==player && i!==car){
+
+goatDoor=i;
+
+}
+
+}
+
+for(let i=0;i<3;i++){
+
+if(i!==player && i!==goatDoor){
+
+remainingDoor=i;
+
+}
+
+}
+
+setTimeout(()=>{
+
+doors[goatDoor].classList.add("open");
+
+doors[goatDoor].innerHTML="🐐";
+
+status.textContent=
+"Monty opens Door "+(goatDoor+1)+" showing a Goat.";
+
+},1200);
+
+setTimeout(()=>{
+
+doors[car].classList.add("open");
+
+doors[car].innerHTML="🚗";
+
+if(player===car){
+
+status.textContent=
+"The player chose correctly. Staying wins.";
+
+}
+
+else{
+
+status.textContent=
+"The player chose a goat. Switching wins.";
+
+}
+
+},2600);
 
 }
