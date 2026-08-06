@@ -1,84 +1,273 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monty Hall Simulator</title>
 
-    <link rel="stylesheet" href="style.css">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Monty Hall Problem Simulator</title>
+
+    <link rel="stylesheet"
+          href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <h1>Monty Hall Problem Simulator</h1>
+    <header>
 
-        <div class="inputs">
+        <h1>🎲 Monty Hall Problem Simulator</h1>
 
-            <div class="card">
-                <h3>Power of 10</h3>
+        <p>
+            Interactive simulation demonstrating why switching
+            doors wins approximately <strong>66.67%</strong>
+            of the time.
+        </p>
 
-                <input
-                    type="number"
-                    id="powerInput"
-                    placeholder="Example: 6">
+    </header>
 
-                <button onclick="runPowerSimulation()">
-                    Run 10ⁿ Simulation
-                </button>
+    <section class="inputSection">
+
+        <div class="card">
+
+            <h2>Power of 10 Simulation</h2>
+
+            <input
+                id="powerInput"
+                type="number"
+                placeholder="Example : 6">
+
+            <button onclick="runPowerSimulation()">
+
+                Run 10ⁿ Simulation
+
+            </button>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Custom Simulation</h2>
+
+            <input
+                id="customInput"
+                type="number"
+                placeholder="Example : 250000">
+
+            <button onclick="runCustomSimulation()">
+
+                Run Custom Simulation
+
+            </button>
+
+        </div>
+
+    </section>
+
+    <section class="results">
+
+        <h2>Simulation Dashboard</h2>
+
+        <div class="grid">
+
+            <div class="box">
+
+                <h3>Total Simulations</h3>
+
+                <p id="runs">0</p>
+
             </div>
 
-            <div class="card">
+            <div class="box">
 
-                <h3>Custom Simulations</h3>
+                <h3>Stay Wins</h3>
 
-                <input
-                    type="number"
-                    id="customInput"
-                    placeholder="Example: 1000000">
+                <p id="stayWins">0</p>
 
-                <button onclick="runCustomSimulation()">
-                    Run Custom Simulation
-                </button>
+            </div>
+
+            <div class="box">
+
+                <h3>Switch Wins</h3>
+
+                <p id="switchWins">0</p>
+
+            </div>
+
+            <div class="box">
+
+                <h3>Stay Probability</h3>
+
+                <p id="stayPercent">0%</p>
+
+            </div>
+
+            <div class="box">
+
+                <h3>Switch Probability</h3>
+
+                <p id="switchPercent">0%</p>
+
+            </div>
+
+            <div class="box">
+
+                <h3>Execution Time</h3>
+
+                <p id="time">0 sec</p>
+
+            </div>
+
+            <div class="box">
+
+                <h3>Simulation Speed</h3>
+
+                <p id="speed">0</p>
+
+            </div>
+
+            <div class="box">
+
+                <h3>Theoretical Stay</h3>
+
+                <p>33.3333%</p>
+
+            </div>
+
+            <div class="box">
+
+                <h3>Theoretical Switch</h3>
+
+                <p>66.6667%</p>
 
             </div>
 
         </div>
 
-        <div class="results">
+    </section>
 
-            <h2>Results</h2>
+    <section class="charts">
 
-            <p>Total Simulations :
-                <span id="runs">0</span>
-            </p>
+        <div class="chartCard">
 
-            <p>Stay Wins :
-                <span id="stayWins">0</span>
-            </p>
+            <h2>Win Distribution</h2>
 
-            <p>Switch Wins :
-                <span id="switchWins">0</span>
-            </p>
-
-            <p>Stay Percentage :
-                <span id="stayPercent">0%</span>
-            </p>
-
-            <p>Switch Percentage :
-                <span id="switchPercent">0%</span>
-            </p>
-
-            <p>Execution Time :
-                <span id="time">0</span>
-            </p>
+            <canvas id="pieChart"></canvas>
 
         </div>
 
-    </div>
+        <div class="chartCard">
+
+            <h2>Comparison Chart</h2>
+
+            <canvas id="barChart"></canvas>
+
+        </div>
+
+    </section>
+
+    <section class="animation">
+
+        <h2>Interactive Monty Hall Game</h2>
+
+        <p>
+
+            Press the button to watch one random game.
+
+        </p>
+
+        <div class="doors">
+
+            <div class="door" id="door1">
+
+                🚪
+
+            </div>
+
+            <div class="door" id="door2">
+
+                🚪
+
+            </div>
+
+            <div class="door" id="door3">
+
+                🚪
+
+            </div>
+
+        </div>
+
+        <button id="playButton">
+
+            ▶ Play One Game
+
+        </button>
+
+    </section>
+
+    <section class="info">
+
+        <h2>
+
+            About the Monty Hall Problem
+
+        </h2>
+
+        <p>
+
+            The Monty Hall problem is a famous probability puzzle
+            based on the television game show
+            <strong>Let's Make a Deal</strong>.
+
+        </p>
+
+        <p>
+
+            A contestant chooses one of three doors.
+            Behind one door is a car and behind the other two are goats.
+
+        </p>
+
+        <p>
+
+            After the contestant chooses a door,
+            the host—who knows where the car is—opens one of the
+            remaining doors to reveal a goat.
+
+        </p>
+
+        <p>
+
+            The contestant is then offered the chance to switch
+            to the other unopened door.
+
+        </p>
+
+        <p>
+
+            Surprisingly,
+            switching doubles the probability of winning,
+            increasing the chance from
+            <strong>33.33%</strong>
+            to
+            <strong>66.67%</strong>.
+
+        </p>
+
+    </section>
+
+</div>
 
 <script src="script.js"></script>
 
 </body>
+
 </html>

@@ -1,0 +1,437 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",Arial,sans-serif;
+}
+
+body{
+
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+
+    color:white;
+
+    min-height:100vh;
+
+    padding:40px;
+
+}
+
+.container{
+
+    width:1200px;
+
+    max-width:95%;
+
+    margin:auto;
+
+}
+
+header{
+
+    text-align:center;
+
+    margin-bottom:45px;
+
+}
+
+header h1{
+
+    font-size:46px;
+
+    margin-bottom:15px;
+
+    letter-spacing:1px;
+
+}
+
+header p{
+
+    color:#cbd5e1;
+
+    font-size:18px;
+
+    line-height:1.7;
+
+}
+
+.inputSection{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:30px;
+
+    margin-bottom:35px;
+
+}
+
+.card{
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(14px);
+
+    border-radius:18px;
+
+    padding:28px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    transition:.35s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 15px 35px rgba(0,0,0,.35);
+
+}
+
+.card h2{
+
+    margin-bottom:20px;
+
+    color:#38bdf8;
+
+}
+
+input{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:12px;
+
+    font-size:17px;
+
+    margin-bottom:18px;
+
+    outline:none;
+
+}
+
+button{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-size:17px;
+
+    font-weight:bold;
+
+    color:white;
+
+    background:linear-gradient(90deg,#2563eb,#3b82f6);
+
+    transition:.3s;
+
+}
+
+button:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 8px 20px rgba(37,99,235,.45);
+
+}
+
+.results{
+
+    margin-top:35px;
+
+}
+
+.results h2{
+
+    margin-bottom:25px;
+
+}
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:20px;
+
+}
+
+.box{
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:18px;
+
+    padding:25px;
+
+    text-align:center;
+
+    transition:.35s;
+
+}
+
+.box:hover{
+
+    transform:scale(1.03);
+
+}
+
+.box h3{
+
+    color:#cbd5e1;
+
+    margin-bottom:15px;
+
+    font-size:18px;
+
+}
+
+.box p{
+
+    font-size:30px;
+
+    color:#38bdf8;
+
+    font-weight:bold;
+
+}
+
+.charts{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:25px;
+
+    margin-top:40px;
+
+}
+
+.chartCard{
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:18px;
+
+    padding:25px;
+
+}
+
+.chartCard h2{
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+}
+
+.animation{
+
+    margin-top:45px;
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:18px;
+
+    padding:30px;
+
+    text-align:center;
+
+}
+
+.animation p{
+
+    margin-top:12px;
+
+    color:#cbd5e1;
+
+}
+
+.doors{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:45px;
+
+    margin:40px 0;
+
+}
+
+.door{
+
+    width:120px;
+
+    height:190px;
+
+    background:linear-gradient(
+    180deg,
+    #a16207,
+    #78350f);
+
+    border:4px solid #4b2505;
+
+    border-radius:12px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:70px;
+
+    cursor:pointer;
+
+    transition:.7s;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.45);
+
+}
+
+.door:hover{
+
+    transform:translateY(-6px);
+
+}
+
+.open{
+
+    transform:rotateY(70deg);
+
+}
+
+.info{
+
+    margin-top:45px;
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:18px;
+
+    padding:35px;
+
+    line-height:1.8;
+
+}
+
+.info h2{
+
+    margin-bottom:20px;
+
+    color:#38bdf8;
+
+}
+
+.info p{
+
+    margin-bottom:18px;
+
+    color:#dbeafe;
+
+}
+
+canvas{
+
+    max-height:350px;
+
+}
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#3b82f6;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#111827;
+
+}
+
+@media(max-width:1000px){
+
+    .grid{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+@media(max-width:800px){
+
+    .inputSection{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .charts{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .doors{
+
+        gap:20px;
+
+    }
+
+    .door{
+
+        width:90px;
+
+        height:150px;
+
+        font-size:55px;
+
+    }
+
+    header h1{
+
+        font-size:34px;
+
+    }
+
+}
